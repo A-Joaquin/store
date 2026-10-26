@@ -1,42 +1,45 @@
-/* --- Presentación: cubo | wordmark con la frase debajo, y la lista de
-   colecciones a la derecha. Entra con un fundido al aparecer. -------------- */
+/* --- Presentación: índice editorial en dos columnas. A la izquierda el
+   cubo con el wordmark y la frase; a la derecha las colecciones en filas
+   grandes y numeradas. Entra con un fundido y las filas suben escalonadas. */
 .presentacion {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   align-items: center;
-  padding: 102px 60px 90px 120px;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 150px 60px 140px;
   opacity: 0;
   transition: opacity 1s;
 }
 .visible {
   opacity: 1;
 }
+
 .marca {
-  display: grid;
-  grid-template-columns: auto auto;
-  column-gap: 30px;
+  display: flex;
   align-items: center;
-  justify-content: start;
-  margin: 0 126px 30px 0;
+  justify-content: center;
+  gap: 34px;
+  padding: 30px 80px 30px 0;
+  border-right: 1px solid #e3e0d8;
 }
 .emblema {
-  grid-row: 1 / span 2;
+  flex: 0 0 auto;
   width: auto;
-  height: 112px;
-  padding-right: 30px;
-  border-right: 1px solid #d9d5cc;
-  box-sizing: content-box;
+  height: 124px;
+}
+.marcaTexto {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding-left: 34px;
+  border-left: 1px solid #d9d5cc;
 }
 .wordmark {
-  grid-column: 2;
-  align-self: end;
-  width: min(320px, 60vw);
+  width: min(340px, 100%);
   height: auto;
 }
 .tagline {
-  grid-column: 2;
-  align-self: start;
-  margin-top: 12px;
   font-family: var(--display);
   font-size: 22px;
   font-weight: 400;
@@ -44,63 +47,92 @@
   letter-spacing: 0.02em;
   color: var(--steel);
 }
+
 .colecciones {
-  display: flex;
-  font-size: 12px;
-  line-height: 1.8;
-  letter-spacing: 1.2px;
+  padding-left: 80px;
+  counter-reset: none;
 }
 .colecciones li {
+  border-top: 1px solid #e3e0d8;
   opacity: 0;
-  transform: translateY(50px);
+  transform: translateY(40px);
   transition:
     opacity 0.8s,
-    transform 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
+    transform 0.9s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+.colecciones li:last-child {
+  border-bottom: 1px solid #e3e0d8;
 }
 .visible .colecciones li {
   opacity: 1;
   transform: none;
 }
-.colecciones li + li {
-  margin-left: 42px;
-}
-/* Triángulo a la izquierda y tachado animado al pasar el mouse. */
 .colecciones a {
-  position: relative;
-  display: inline-block;
-  padding-left: 15px;
+  display: grid;
+  grid-template-columns: 54px 1fr auto;
+  align-items: center;
+  padding: 22px 6px 22px 0;
 }
-.colecciones a::before {
+.numero {
+  font-size: 11px;
+  letter-spacing: 0.3em;
+  color: #888;
+  transition: color 0.4s;
+}
+.nombreColeccion {
+  font-family: var(--display);
+  font-size: clamp(34px, 3vw, 46px);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+  transition:
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.4s;
+}
+/* Flecha dibujada: línea + punta, como "VER TODO →". */
+.flechaColeccion {
+  position: relative;
+  width: 26px;
+  height: 12px;
+  opacity: 0.35;
+  transition:
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.4s;
+}
+.flechaColeccion::before {
   content: '';
   position: absolute;
   top: 50%;
   left: 0;
-  margin-top: -5px;
-  border-top: 5px solid transparent;
-  border-bottom: 5px solid transparent;
-  border-left: 5px solid currentColor;
-  transition: transform 0.3s;
+  right: 1px;
+  height: 1px;
+  background: var(--ink);
 }
-.colecciones a::after {
+.flechaColeccion::after {
   content: '';
   position: absolute;
   top: 50%;
-  left: 10px;
-  right: -5px;
-  height: 1px;
-  background: currentColor;
-  transform: scaleX(0);
-  transform-origin: left center;
-  transition: transform 0.3s;
+  right: 1px;
+  width: 7px;
+  height: 7px;
+  margin-top: -4px;
+  border-top: 1px solid var(--ink);
+  border-right: 1px solid var(--ink);
+  transform: rotate(45deg);
 }
-.colecciones a:hover {
-  color: var(--ice-dark);
+.colecciones a:hover .nombreColeccion,
+.colecciones a:focus-visible .nombreColeccion {
+  transform: translateX(12px);
 }
-.colecciones a:hover::before {
-  transform: translateX(3px);
+.colecciones a:hover .numero,
+.colecciones a:focus-visible .numero {
+  color: var(--ink);
 }
-.colecciones a:hover::after {
-  transform: scaleX(1);
+.colecciones a:hover .flechaColeccion,
+.colecciones a:focus-visible .flechaColeccion {
+  opacity: 1;
+  transform: translateX(6px);
 }
 
 /* --- Divisor entre colecciones: número, línea, cubo, línea, nombre -------- */
@@ -238,37 +270,37 @@
 
 @media (max-width: 812px) {
   .presentacion {
-    padding: 95px 30px 75px;
+    grid-template-columns: 1fr;
+    padding: 90px 25px 70px;
   }
   .marca {
-    column-gap: 18px;
-    margin: 0;
+    justify-content: flex-start;
+    gap: 18px;
+    padding: 0 0 36px;
+    border-right: 0;
   }
   .emblema {
-    height: 74px;
-    padding-right: 18px;
+    height: 78px;
+  }
+  .marcaTexto {
+    gap: 8px;
+    padding-left: 18px;
   }
   .wordmark {
-    width: min(210px, 52vw);
+    width: min(220px, 56vw);
   }
   .tagline {
-    margin-top: 8px;
-    font-size: 16px;
+    font-size: 15px;
   }
   .colecciones {
-    flex-wrap: wrap;
-    margin-top: 28px;
-    font-size: 11px;
-    letter-spacing: 0.03em;
-  }
-  .colecciones li {
-    margin: 5px 20px 0 0;
-  }
-  .colecciones li + li {
-    margin-left: 0;
+    padding-left: 0;
   }
   .colecciones a {
-    padding-left: 10px;
+    grid-template-columns: 40px 1fr auto;
+    padding: 18px 2px 18px 0;
+  }
+  .nombreColeccion {
+    font-size: 30px;
   }
   .divisor {
     gap: 12px;
