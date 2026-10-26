@@ -64,7 +64,7 @@ function Modal({ prenda, cerrar }: { prenda: PrendaTarjeta; cerrar: () => void }
         <button ref={cerrarRef} type="button" className={`${s.cerrar} ${s.contenido}`} onClick={cerrar} aria-label="Cerrar" />
 
         <div className={`${s.galeria} ${s.contenido}`}>
-          <div className={s.principal}>
+          <div className={s.principal} data-cursor="prenda">
             {actual && (
               // eslint-disable-next-line @next/next/no-img-element -- tamaños ya generados por Payload
               <img src={actual.grande} srcSet={actual.srcSet} sizes="45vw" alt={actual.alt} />

@@ -156,16 +156,23 @@ textarea {
 }
 
 /* Cursor de la marca: el ojo con la espada apuntando como una flecha
-   (generado por scripts/generar-cursor.mjs; punto activo en la punta: 6 2).
-   En enlaces y botones, la misma forma en azul hielo. Los campos de texto
-   conservan su cursor de texto. Si el navegador no entiende image-set, usa
-   la versión simple (primera declaración). */
+   (generado por scripts/generar-cursor.mjs; punto activo en la punta: 6 3).
+   Cambia según la zona: azul en enlaces y botones; sobre una prenda
+   ([data-cursor='prenda']) el ojo se ilumina en blanco y la espada no; sobre
+   fondos oscuros (ContrasteAuto marca html[data-cursor-oscuro]) se vuelve
+   blanco. Los campos de texto conservan su cursor de texto. Si el navegador
+   no entiende image-set, usa la versión simple (primera declaración). */
 :root {
-  --cursor: image-set(url('/cursor-ojo.png') 1x, url('/cursor-ojo@2x.png') 2x) 6 2, auto;
-  --cursor-enlace: image-set(url('/cursor-ojo-enlace.png') 1x, url('/cursor-ojo-enlace@2x.png') 2x) 6 2, pointer;
+  --cursor: image-set(url('/cursor-ojo.png') 1x, url('/cursor-ojo@2x.png') 2x) 6 3, auto;
+  --cursor-enlace: image-set(url('/cursor-ojo-enlace.png') 1x, url('/cursor-ojo-enlace@2x.png') 2x) 6 3, pointer;
+  --cursor-prenda: image-set(url('/cursor-ojo-prenda.png') 1x, url('/cursor-ojo-prenda@2x.png') 2x) 6 3, pointer;
+}
+:root[data-cursor-oscuro] {
+  --cursor: image-set(url('/cursor-ojo-oscuro.png') 1x, url('/cursor-ojo-oscuro@2x.png') 2x) 6 3, auto;
+  --cursor-prenda: image-set(url('/cursor-ojo-prenda-oscuro.png') 1x, url('/cursor-ojo-prenda-oscuro@2x.png') 2x) 6 3, pointer;
 }
 html {
-  cursor: url('/cursor-ojo.png') 6 2, auto;
+  cursor: url('/cursor-ojo.png') 6 3, auto;
   cursor: var(--cursor);
 }
 a,
@@ -175,8 +182,14 @@ label,
 select,
 [role='button'],
 [role='radio'] {
-  cursor: url('/cursor-ojo-enlace.png') 6 2, pointer;
+  cursor: url('/cursor-ojo-enlace.png') 6 3, pointer;
   cursor: var(--cursor-enlace);
+}
+[data-cursor='prenda'],
+[data-cursor='prenda'] a,
+[data-cursor='prenda'] img {
+  cursor: url('/cursor-ojo-prenda.png') 6 3, pointer;
+  cursor: var(--cursor-prenda);
 }
 input:not([type='radio'], [type='checkbox'], [type='submit'], [type='button']),
 textarea {

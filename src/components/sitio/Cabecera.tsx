@@ -191,7 +191,7 @@ export function Cabecera({ colecciones, categorias, prendas, destacada, redes }:
             </Link>
           </div>
           {actual && destino && (
-            <Link className={s.megaDestacado} href={destino} onClick={cerrarMega} tabIndex={mega ? 0 : -1}>
+            <Link className={s.megaDestacado} data-cursor="prenda" href={destino} onClick={cerrarMega} tabIndex={mega ? 0 : -1}>
               {capas.map(({ prenda, id }, i) => (
                 <span
                   key={id}

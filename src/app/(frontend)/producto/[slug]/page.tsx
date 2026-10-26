@@ -133,7 +133,7 @@ export default async function FichaProducto({ params }: Props) {
   return (
     <article className={s.ficha}>
       <div className={s.arriba}>
-        <div className={s.foto}>
+        <div className={s.foto} data-cursor="prenda">
           {/* La foto principal es el LCP de la ficha. */}
           <Imagen media={principal} prioridad sizes="(max-width: 812px) 100vw, 50vw" />
         </div>
@@ -182,7 +182,7 @@ export default async function FichaProducto({ params }: Props) {
       </div>
 
       {resto.length > 0 && (
-        <ul className={s.detalles}>
+        <ul className={s.detalles} data-cursor="prenda">
           {resto.map((f) => (
             <li key={typeof f === 'object' ? f.id : f}>
               <Imagen media={f} sizes="50vw" />

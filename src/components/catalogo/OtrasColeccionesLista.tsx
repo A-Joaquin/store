@@ -30,7 +30,7 @@ export function OtrasColeccionesLista({ colecciones }: { colecciones: ColeccionC
           const foto = c.fotos.length ? c.fotos[Math.floor(((azar + i * 0.618) % 1) * c.fotos.length)] : null
           return (
             <Link key={c.href} href={c.href} className={s.item}>
-              <span className={s.foto}>
+              <span className={s.foto} data-cursor="prenda">
                 {foto && (
                   // eslint-disable-next-line @next/next/no-img-element -- tamaños ya generados por Payload
                   <img

@@ -9,7 +9,8 @@
 .fotos {
   position: absolute;
   inset: 0;
-  cursor: var(--cursor-enlace);
+  /* Cursor normal (blanco sobre zonas oscuras), no el de enlace: es una foto. */
+  cursor: var(--cursor);
   /* Se puede arrastrar para cambiar de foto: sin selección ni arrastre de la
      imagen del navegador, y en el celular el gesto vertical sigue desplazando
      la página. */

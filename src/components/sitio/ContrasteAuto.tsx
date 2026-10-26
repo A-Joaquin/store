@@ -138,6 +138,29 @@ export function ContrasteAuto() {
       if (!cuadro) cuadro = requestAnimationFrame(revisar)
     }
 
+    // Cursor: el mismo detector mide bajo el mouse y marca html[data-cursor-oscuro]
+    // (el CSS cambia el cursor a su versión blanca). Una medición por cuadro.
+    let mouse: { x: number; y: number } | null = null
+    let cuadroCursor = 0
+    const raiz = document.documentElement
+    const revisarCursor = () => {
+      cuadroCursor = 0
+      if (!mouse) return
+      const b = brilloEn(mouse.x, mouse.y)
+      if (b < OSCURO) raiz.dataset.cursorOscuro = ''
+      else if (b > CLARO) delete raiz.dataset.cursorOscuro
+    }
+    const alMover = (e: PointerEvent) => {
+      if (e.pointerType !== 'mouse') return
+      mouse = { x: e.clientX, y: e.clientY }
+      if (!cuadroCursor) cuadroCursor = requestAnimationFrame(revisarCursor)
+    }
+    const pedirCursor = () => {
+      if (mouse && !cuadroCursor) cuadroCursor = requestAnimationFrame(revisarCursor)
+    }
+    window.addEventListener('pointermove', alMover, { passive: true })
+    window.addEventListener('scroll', pedirCursor, { passive: true })
+
     pedir()
     window.addEventListener('scroll', pedir, { passive: true })
     window.addEventListener('resize', pedir)
@@ -150,6 +173,10 @@ export function ContrasteAuto() {
 
     return () => {
       cancelAnimationFrame(cuadro)
+      cancelAnimationFrame(cuadroCursor)
+      window.removeEventListener('pointermove', alMover)
+      window.removeEventListener('scroll', pedirCursor)
+      delete raiz.dataset.cursorOscuro
       window.removeEventListener('scroll', pedir)
       window.removeEventListener('resize', pedir)
       document.removeEventListener('load', pedir, true)

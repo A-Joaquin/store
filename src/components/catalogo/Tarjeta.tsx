@@ -30,7 +30,7 @@ export function Tarjeta({ prenda, sizes = '(max-width: 812px) 50vw, 20vw', prior
 
   return (
     <article className={s.tarjeta} onMouseLeave={() => setIndice(0)}>
-      <div className={s.figura}>
+      <div className={s.figura} data-cursor="prenda">
         <Link
           href={url}
           className={s.foto}
