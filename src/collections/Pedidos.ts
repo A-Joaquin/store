@@ -156,6 +156,16 @@ export const Pedidos: CollectionConfig = {
     },
     // Barra lateral
     {
+      // Solo interfaz (no se guarda): enlace de seguimiento para abrir, copiar
+      // o mandar al cliente.
+      name: 'enlace',
+      type: 'ui',
+      admin: {
+        position: 'sidebar',
+        components: { Field: '@/components/admin/EnlaceSeguimiento#EnlaceSeguimiento' },
+      },
+    },
+    {
       name: 'reservaHasta',
       label: 'Reserva hasta',
       type: 'date',

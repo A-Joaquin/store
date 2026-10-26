@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Fragment } from 'react'
 
-import { BloqueColeccion } from '@/components/catalogo/BloqueColeccion'
+import { BloquePaginado } from '@/components/catalogo/BloquePaginado'
 import { Hero } from '@/components/portada/Hero'
 import { Intro } from '@/components/portada/Intro'
 import { Presentacion } from '@/components/portada/Presentacion'
@@ -32,13 +32,7 @@ export default async function Inicio() {
       {colecciones.map((c, i) => (
         <Fragment key={c.id}>
           {i > 0 && <Divisor numero={i + 1} nombre={c.nombre} />}
-          <BloqueColeccion
-            id={c.slug}
-            titulo={c.nombre}
-            prendas={bloques[i].prendas}
-            total={bloques[i].total}
-            verTodo={rutaColeccion(c.slug)}
-          />
+          <BloquePaginado id={c.slug} coleccionId={c.id} titulo={c.nombre} verTodo={rutaColeccion(c.slug)} inicial={bloques[i]} />
         </Fragment>
       ))}
 

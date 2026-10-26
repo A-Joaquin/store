@@ -15,12 +15,22 @@
   align-items: center;
   gap: 18px;
 }
-.paginacion a {
+.paginacion a,
+.boton {
   color: #888;
   transition: color 0.3s;
 }
-.paginacion a:hover {
+.paginacion a:hover,
+.boton:hover {
   color: #000;
+}
+.boton {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
 }
 .actual {
   padding-bottom: 3px;

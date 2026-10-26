@@ -16,14 +16,33 @@ function numeros(actual: number, total: number): (number | '…')[] {
   return salida
 }
 
-export function Paginacion({ base, pagina, total }: { base: string; pagina: number; total: number }) {
+type Props = {
+  base: string
+  pagina: number
+  total: number
+  // Con alCambiar, cambia de página en el lugar (portada); sin él, son
+  // enlaces a /…/pagina/n (páginas de colección y categoría).
+  alCambiar?: (n: number) => void
+}
+
+export function Paginacion({ base, pagina, total, alCambiar }: Props) {
   if (total <= 1) return null
+
+  const destino = (n: number, contenido: React.ReactNode, props: { className?: string; rel?: string; label?: string } = {}) =>
+    alCambiar ? (
+      <button type="button" className={`${s.boton} ${props.className ?? ''}`} onClick={() => alCambiar(n)} aria-label={props.label}>
+        {contenido}
+      </button>
+    ) : (
+      <Link className={props.className} href={rutaPagina(base, n)} rel={props.rel} aria-label={props.label}>
+        {contenido}
+      </Link>
+    )
+
   return (
     <nav className={s.paginacion} aria-label="Páginas">
       {pagina > 1 ? (
-        <Link className={s.flecha} href={rutaPagina(base, pagina - 1)} rel="prev" aria-label="Página anterior">
-          ←
-        </Link>
+        destino(pagina - 1, '←', { className: s.flecha, rel: 'prev', label: 'Página anterior' })
       ) : (
         <span className={`${s.flecha} ${s.inactiva}`} aria-hidden="true">
           ←
@@ -42,16 +61,14 @@ export function Paginacion({ base, pagina, total }: { base: string; pagina: numb
                   {String(n).padStart(2, '0')}
                 </span>
               ) : (
-                <Link href={rutaPagina(base, n)}>{String(n).padStart(2, '0')}</Link>
+                destino(n, String(n).padStart(2, '0'))
               )}
             </li>
           ),
         )}
       </ol>
       {pagina < total ? (
-        <Link className={s.flecha} href={rutaPagina(base, pagina + 1)} rel="next" aria-label="Página siguiente">
-          →
-        </Link>
+        destino(pagina + 1, '→', { className: s.flecha, rel: 'next', label: 'Página siguiente' })
       ) : (
         <span className={`${s.flecha} ${s.inactiva}`} aria-hidden="true">
           →
