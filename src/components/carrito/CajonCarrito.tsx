@@ -1,14 +1,14 @@
 'use client'
 
+import Link from 'next/link'
 import { useEffect } from 'react'
 
 import { precioBs } from '@/lib/formato'
-import { SITE_URL, rutaProducto } from '@/lib/sitio'
 
 import { useCarrito } from './Carrito'
 import s from './CajonCarrito.module.css'
 
-export function CajonCarrito({ whatsapp }: { whatsapp?: string | null }) {
+export function CajonCarrito() {
   const { items, subtotal, abierto, cerrar, cambiarCantidad, quitar } = useCarrito()
 
   useEffect(() => {
@@ -17,14 +17,6 @@ export function CajonCarrito({ whatsapp }: { whatsapp?: string | null }) {
     document.addEventListener('keydown', alTeclear)
     return () => document.removeEventListener('keydown', alTeclear)
   }, [abierto, cerrar])
-
-  // Fase 1: el pedido se cierra por WhatsApp con el detalle de la bolsa.
-  const numero = whatsapp?.replace(/\D/g, '')
-  const mensaje = [
-    'Hola, quiero hacer este pedido:',
-    ...items.map((i) => `• ${i.cantidad} × ${i.nombre} — talla ${i.talla} (${precioBs(i.precio * i.cantidad)})\n  ${SITE_URL}${rutaProducto(i.slug)}`),
-    `Subtotal: ${precioBs(subtotal)}`,
-  ].join('\n')
 
   return (
     <div className={abierto ? s.abierto : undefined}>
@@ -68,15 +60,10 @@ export function CajonCarrito({ whatsapp }: { whatsapp?: string | null }) {
             <dt>SUBTOTAL</dt>
             <dd>{precioBs(subtotal)}</dd>
           </dl>
-          <a
-            className={s.pedir}
-            href={numero ? `https://wa.me/${numero}?text=${encodeURIComponent(mensaje)}` : undefined}
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-disabled={items.length === 0 || !numero}
-          >
-            PEDIR POR WHATSAPP
-          </a>
+          {/* El pedido se registra (y reserva el stock) antes de ir a WhatsApp. */}
+          <Link className={s.pedir} href="/pedido" onClick={cerrar} aria-disabled={items.length === 0}>
+            FINALIZAR PEDIDO
+          </Link>
         </div>
       </aside>
     </div>

@@ -31,8 +31,13 @@ export type ResultadoPedido =
 
 const MAX_LINEAS = 20
 const MAX_POR_LINEA = 10
+const MAX_PENDIENTES = 3
 
-export const ciudadesDomicilio = (ajustes: Ajustes): string[] => ajustes.envios?.ciudadesLocales ?? ['La Paz', 'El Alto']
+// Si en Ajustes no hay ninguna marcada (o el campo es de antes), La Paz y El Alto.
+export const ciudadesDomicilio = (ajustes: Ajustes): string[] => {
+  const marcadas = ajustes.envios?.ciudadesLocales
+  return marcadas && marcadas.length > 0 ? marcadas : ['La Paz', 'El Alto']
+}
 
 // A domicilio: costo local. Por encomienda: costo nacional. Gratis desde un monto.
 export function costoEnvio(ajustes: Ajustes, metodo: string, subtotal: number) {
@@ -94,6 +99,15 @@ export async function crearPedido(
   } else if (recibeDocumento.replace(/\D/g, '').length < 5) {
     return { ok: false, error: 'Escribe el CI de quien recogerá la encomienda (lo piden en la terminal).' }
   }
+  // Cada pedido reserva stock: se limitan los pendientes por número para que
+  // nadie pueda "agotar" la tienda con pedidos falsos.
+  const pendientes = await payload.count({
+    collection: 'pedidos',
+    where: { and: [{ telefono: { equals: telefono } }, { estado: { equals: 'pendiente' } }] },
+  })
+  if (!opciones.simulado && pendientes.totalDocs >= MAX_PENDIENTES)
+    return { ok: false, error: `Ya tienes ${MAX_PENDIENTES} pedidos pendientes con este número. Escríbenos por WhatsApp para confirmarlos.` }
+
   const pedidas = (entrada.items ?? []).filter((i) => Number.isInteger(i.cantidad) && i.cantidad > 0)
   if (pedidas.length === 0) return { ok: false, error: 'Tu bolsa está vacía.' }
   if (pedidas.length > MAX_LINEAS || pedidas.some((i) => i.cantidad > MAX_POR_LINEA))

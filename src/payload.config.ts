@@ -34,6 +34,10 @@ const primeraImagen = (galeria: unknown) => {
 export default buildConfig({
   admin: {
     user: Users.slug,
+    components: {
+      // Resumen de ventas en el inicio del panel.
+      beforeDashboard: ['@/components/admin/ResumenVentas#ResumenVentas'],
+    },
     meta: {
       titleSuffix: ` · ${MARCA}`,
     },

@@ -1,8 +1,10 @@
 import type { CollectionConfig } from 'payload'
-import { APIError } from 'payload'
+import { APIError, type Where } from 'payload'
 
 import { liberar } from '@/lib/pedidos/stock'
 import { CIUDADES, ESTADOS, METODOS, type EstadoPedido } from '@/lib/pedidos/estados'
+
+const SOLO_BORRABLES: Where = { or: [{ estado: { equals: 'cancelado' } }, { simulado: { equals: true } }] }
 
 // Pedidos de la fase 1: se crean desde la web (sin pago en línea), el stock
 // queda reservado y la venta se cierra por WhatsApp. El equipo mueve el
@@ -16,7 +18,8 @@ export const Pedidos: CollectionConfig = {
     read: ({ req: { user } }) => Boolean(user),
     create: ({ req: { user } }) => Boolean(user),
     update: ({ req: { user } }) => Boolean(user),
-    delete: ({ req: { user } }) => Boolean(user),
+    // Solo cancelados o de prueba: borrar una venta devolvería su stock.
+    delete: ({ req: { user } }) => (user ? SOLO_BORRABLES : false),
   },
   admin: {
     useAsTitle: 'numero',

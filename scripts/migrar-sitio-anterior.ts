@@ -24,7 +24,6 @@ import {
 } from './datos-sitio-anterior'
 
 const ASSETS = path.resolve(process.cwd(), '../assets/whatice')
-const STOCK_EJEMPLO = 10
 
 type Talla = NonNullable<Producto['tallas']>[number]['talla']
 
@@ -114,7 +113,8 @@ for (const [i, [id, p]] of Object.entries(CATALOG).entries()) {
     precio: precioEjemplo(p.price),
     descripcion: p.desc,
     galeria,
-    tallas: p.sizes.map((talla) => ({ talla: talla as Talla, stock: STOCK_EJEMPLO, sku: `${sku}-${talla}` })),
+    // El stock va en la colección Inventario: después correr scripts/crear-inventario.ts
+    tallas: p.sizes.map((talla) => ({ talla: talla as Talla, sku: `${sku}-${talla}` })),
     orden: i,
     _status: 'published',
   })

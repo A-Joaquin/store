@@ -83,7 +83,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <Cabecera colecciones={listaColecciones} categorias={categorias} prendas={prendas} destacada={destacada} redes={redes} />
               <BarraLateral />
               <MenuMovil colecciones={listaColecciones} categorias={categorias} prendas={prendas} redes={redes} />
-              <CajonCarrito whatsapp={whatsapp} />
+              <CajonCarrito />
 
               <main id="contenido">{children}</main>
 
