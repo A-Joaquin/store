@@ -163,7 +163,28 @@ export const Productos: CollectionConfig = {
   hooks: {
     // La prenda sale en su ficha, la portada, su colección, su categoría (con
     // paginación), los menús y el sitemap: se regenera todo.
-    afterChange: [() => revalidarTodo()],
+    // Cada talla nueva recibe su fila de stock en Inventario (en 0), para que
+    // al crear una prenda solo haya que poner las cantidades.
+    afterChange: [
+      async ({ doc, req }) => {
+        const tallas = (doc.tallas ?? []).map((t: { talla: string }) => t.talla)
+        if (tallas.length > 0) {
+          const { docs } = await req.payload.find({
+            collection: 'inventario',
+            where: { producto: { equals: doc.id } },
+            pagination: false,
+            depth: 0,
+            select: { talla: true },
+            req,
+          })
+          const ya = new Set(docs.map((d) => d.talla))
+          for (const talla of tallas.filter((t: string) => !ya.has(t as (typeof docs)[number]['talla']))) {
+            await req.payload.create({ collection: 'inventario', data: { producto: doc.id, talla, stock: 0 }, req })
+          }
+        }
+        revalidarTodo()
+      },
+    ],
     afterDelete: [() => revalidarTodo()],
   },
 }
