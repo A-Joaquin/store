@@ -30,3 +30,13 @@ export const CIUDADES = [
 
 // Horas que el stock queda reservado mientras se coordina el pago.
 export const HORAS_RESERVA = 48
+
+// Formas de entrega. Encomienda: se despacha por una empresa de transporte
+// y el cliente la recoge en la terminal de su ciudad.
+export const METODOS = [
+  { valor: 'domicilio', etiqueta: 'A domicilio' },
+  { valor: 'encomienda', etiqueta: 'Por encomienda (recoger en terminal)' },
+] as const
+
+export type MetodoEntrega = (typeof METODOS)[number]['valor']
+export const etiquetaMetodo = (m: string) => METODOS.find((x) => x.valor === m)?.etiqueta ?? m

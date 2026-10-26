@@ -11,7 +11,7 @@ import { BarraLateral } from '@/components/sitio/BarraLateral'
 import { Cabecera } from '@/components/sitio/Cabecera'
 import { MenuMovil, MenuMovilProvider } from '@/components/sitio/MenuMovil'
 import { Pie } from '@/components/sitio/Pie'
-import { getAjustes, getColecciones, getPrendasMenu } from '@/lib/datos'
+import { getAjustes, getCategorias, getColecciones, getPrendasMenu } from '@/lib/datos'
 import { MARCA, SITE_URL } from '@/lib/sitio'
 
 import './globals.css'
@@ -52,7 +52,12 @@ export const viewport: Viewport = {
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [ajustes, colecciones, prendas] = await Promise.all([getAjustes(), getColecciones(), getPrendasMenu()])
+  const [ajustes, colecciones, categorias, prendas] = await Promise.all([
+    getAjustes(),
+    getColecciones(),
+    getCategorias(),
+    getPrendasMenu(),
+  ])
   const whatsapp = ajustes.whatsapp?.replace(/\D/g, '') || null
   const redes = {
     instagram: ajustes.redes?.instagram,
@@ -75,9 +80,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               <a href="#contenido" className="saltar">
                 Ir al contenido
               </a>
-              <Cabecera colecciones={listaColecciones} prendas={prendas} destacada={destacada} redes={redes} />
+              <Cabecera colecciones={listaColecciones} categorias={categorias} prendas={prendas} destacada={destacada} redes={redes} />
               <BarraLateral />
-              <MenuMovil colecciones={listaColecciones} prendas={prendas} redes={redes} />
+              <MenuMovil colecciones={listaColecciones} categorias={categorias} prendas={prendas} redes={redes} />
               <CajonCarrito whatsapp={whatsapp} />
 
               <main id="contenido">{children}</main>

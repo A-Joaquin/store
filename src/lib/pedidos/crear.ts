@@ -3,7 +3,7 @@ import type { Payload } from 'payload'
 
 import type { Ajustes, Pedido } from '@/payload-types'
 
-import { CIUDADES, HORAS_RESERVA } from './estados'
+import { CIUDADES, HORAS_RESERVA, type MetodoEntrega } from './estados'
 import { reservar, liberar, type Linea } from './stock'
 
 export type EntradaPedido = {
@@ -13,9 +13,15 @@ export type EntradaPedido = {
   email?: string
   documento?: string
   razonSocial?: string
-  metodo: 'envio' | 'recojo'
+  metodo: MetodoEntrega
   ciudad?: string
+  // A domicilio
   direccion?: string
+  referencia?: string
+  // Por encomienda
+  empresa?: string
+  recibeNombre?: string
+  recibeDocumento?: string
   notas?: string
 }
 
@@ -26,12 +32,13 @@ export type ResultadoPedido =
 const MAX_LINEAS = 20
 const MAX_POR_LINEA = 10
 
-export function costoEnvio(ajustes: Ajustes, metodo: string, ciudad: string | undefined, subtotal: number) {
-  if (metodo !== 'envio') return 0
+export const ciudadesDomicilio = (ajustes: Ajustes): string[] => ajustes.envios?.ciudadesLocales ?? ['La Paz', 'El Alto']
+
+// A domicilio: costo local. Por encomienda: costo nacional. Gratis desde un monto.
+export function costoEnvio(ajustes: Ajustes, metodo: string, subtotal: number) {
   const e = ajustes.envios
   if (e?.gratisDesde && subtotal >= e.gratisDesde) return 0
-  const locales = e?.ciudadesLocales ?? ['La Paz', 'El Alto']
-  return ciudad && locales.includes(ciudad as (typeof locales)[number]) ? (e?.costoLocal ?? 15) : (e?.costoNacional ?? 35)
+  return metodo === 'domicilio' ? (e?.costoLocal ?? 15) : (e?.costoNacional ?? 35)
 }
 
 const limpiar = (s: unknown, max: number) => (typeof s === 'string' ? s.trim().slice(0, max) : '')
@@ -68,14 +75,24 @@ export async function crearPedido(
   // --- Validación -----------------------------------------------------------
   const nombre = limpiar(entrada.nombre, 80)
   const telefono = limpiar(entrada.telefono, 20).replace(/[^\d+]/g, '')
-  const metodo = entrada.metodo === 'recojo' ? 'recojo' : 'envio'
+  const metodo: MetodoEntrega = entrada.metodo === 'encomienda' ? 'encomienda' : 'domicilio'
   const ciudad = limpiar(entrada.ciudad, 30)
   const direccion = limpiar(entrada.direccion, 300)
+  const referencia = limpiar(entrada.referencia, 200)
+  const empresa = limpiar(entrada.empresa, 80)
+  const recibeNombre = limpiar(entrada.recibeNombre, 80) || nombre
+  const recibeDocumento = limpiar(entrada.recibeDocumento, 20)
+  const ajustes = await payload.findGlobal({ slug: 'ajustes' })
+  const locales = ciudadesDomicilio(ajustes)
   if (nombre.length < 2) return { ok: false, error: 'Escribe tu nombre.' }
   if (telefono.replace(/\D/g, '').length < 7) return { ok: false, error: 'Escribe un número de WhatsApp válido.' }
-  if (metodo === 'envio') {
-    if (!CIUDADES.includes(ciudad as (typeof CIUDADES)[number])) return { ok: false, error: 'Elige la ciudad de envío.' }
-    if (direccion.length < 5) return { ok: false, error: 'Escribe la dirección de envío.' }
+  if (!CIUDADES.includes(ciudad as (typeof CIUDADES)[number])) return { ok: false, error: 'Elige tu ciudad.' }
+  if (metodo === 'domicilio') {
+    if (!locales.includes(ciudad))
+      return { ok: false, error: `El envío a domicilio es solo en ${locales.join(' y ')}. Para ${ciudad} elige encomienda.` }
+    if (direccion.length < 5) return { ok: false, error: 'Escribe la dirección de entrega.' }
+  } else if (recibeDocumento.replace(/\D/g, '').length < 5) {
+    return { ok: false, error: 'Escribe el CI de quien recogerá la encomienda (lo piden en la terminal).' }
   }
   const pedidas = (entrada.items ?? []).filter((i) => Number.isInteger(i.cantidad) && i.cantidad > 0)
   if (pedidas.length === 0) return { ok: false, error: 'Tu bolsa está vacía.' }
@@ -120,9 +137,8 @@ export async function crearPedido(
 
   // --- Pedido -------------------------------------------------------------
   try {
-    const ajustes = await payload.findGlobal({ slug: 'ajustes' })
     const subtotal = items.reduce((n, i) => n + i.precio * i.cantidad, 0)
-    const envio = costoEnvio(ajustes, metodo, ciudad, subtotal)
+    const envio = costoEnvio(ajustes, metodo, subtotal)
     const ahora = new Date()
     const pedido = await payload.create({
       collection: 'pedidos',
@@ -134,8 +150,10 @@ export async function crearPedido(
         documento: limpiar(entrada.documento, 30) || undefined,
         razonSocial: limpiar(entrada.razonSocial, 120) || undefined,
         metodo,
-        ciudad: metodo === 'envio' ? (ciudad as Pedido['ciudad']) : undefined,
-        direccion: metodo === 'envio' ? direccion : undefined,
+        ciudad: ciudad as Pedido['ciudad'],
+        ...(metodo === 'domicilio'
+          ? { direccion, referencia: referencia || undefined }
+          : { empresa: empresa || undefined, recibeNombre, recibeDocumento }),
         notas: limpiar(entrada.notas, 500) || undefined,
         items,
         subtotal,

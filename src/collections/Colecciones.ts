@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { slugField } from '@/fields/slug'
-import { revalidar } from '@/lib/revalidar'
+import { revalidarTodo } from '@/lib/revalidar'
 
 export const Colecciones: CollectionConfig = {
   slug: 'colecciones',
@@ -45,7 +45,7 @@ export const Colecciones: CollectionConfig = {
     },
   ],
   hooks: {
-    afterChange: [({ doc }) => revalidar('/', `/coleccion/${doc.slug}`, '/sitemap.xml')],
-    afterDelete: [({ doc }) => revalidar('/', `/coleccion/${doc.slug}`, '/sitemap.xml')],
+    afterChange: [() => revalidarTodo()],
+    afterDelete: [() => revalidarTodo()],
   },
 }

@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { useCarrito } from '@/components/carrito/Carrito'
-import { INFORMACION, MENU_PRINCIPAL, PRENDAS, type PrendaMenu } from '@/lib/navegacion'
+import { INFORMACION, MENU_PRINCIPAL, type CategoriaMenu, type PrendaMenu } from '@/lib/navegacion'
 import { rutaColeccion, rutaProducto } from '@/lib/sitio'
 import { useMagnetico } from '@/lib/useMagnetico'
 
@@ -18,6 +18,7 @@ type Columna = 'colecciones' | 'prendas' | 'whatice'
 
 type Props = {
   colecciones: Coleccion[]
+  categorias: CategoriaMenu[]
   prendas: PrendaMenu[]
   // Prenda del recuadro del mega menú antes de pasar por ningún enlace.
   destacada: PrendaMenu | null
@@ -33,7 +34,7 @@ function elegir(prendas: PrendaMenu[], filtro: (p: PrendaMenu) => boolean, actua
   return opciones[Math.floor(Math.random() * opciones.length)]
 }
 
-export function Cabecera({ colecciones, prendas, destacada, redes }: Props) {
+export function Cabecera({ colecciones, categorias, prendas, destacada, redes }: Props) {
   const ruta = usePathname()
   const carrito = useCarrito()
   const menuMovil = useMenuMovil()
@@ -162,7 +163,7 @@ export function Cabecera({ colecciones, prendas, destacada, redes }: Props) {
           </div>
           <div className={`${s.megaCol} ${mega === 'prendas' ? s.megaColActiva : ''}`}>
             <p className={s.megaTitulo}>PRENDAS</p>
-            {PRENDAS.map((e) => (
+            {categorias.map((e) => (
               <Link
                 key={e.texto}
                 href={e.href}

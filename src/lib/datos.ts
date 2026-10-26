@@ -4,7 +4,8 @@ import { cache } from 'react'
 
 import { comoMedia } from './imagen'
 import { stockDe } from './pedidos/stock'
-import type { PrendaMenu } from './navegacion'
+import type { CategoriaMenu, PrendaMenu } from './navegacion'
+import { rutaCategoria } from './sitio'
 
 // overrideAccess: false aplica las reglas de acceso de un visitante: solo
 // productos publicados, nunca borradores.
@@ -70,6 +71,22 @@ export const getPrendasMenu = cache(async (): Promise<PrendaMenu[]> => {
       imagen: foto ? foto.sizes?.w800?.url || foto.sizes?.w400?.url || null : null,
     }
   })
+})
+
+// Categorías (tipos de prenda con página) para los menús.
+export const getCategorias = cache(async (): Promise<CategoriaMenu[]> => {
+  const { docs } = await (await cliente()).find({
+    collection: 'tipos',
+    pagination: false,
+    sort: 'id',
+    select: { nombre: true, categoria: true, slug: true },
+    ...publico,
+  })
+  return docs.flatMap((t) =>
+    t.slug
+      ? [{ texto: t.categoria ? t.categoria.charAt(0) + t.categoria.slice(1).toLowerCase() : t.nombre, href: rutaCategoria(t.slug), tipo: t.nombre }]
+      : [],
+  )
 })
 
 // Stock disponible por "<productoId>:<talla>".

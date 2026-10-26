@@ -38,13 +38,20 @@ export const Ajustes: GlobalConfig = {
           fields: [
             {
               name: 'costoLocal',
-              label: 'Envío local (Bs)',
+              label: 'Envío a domicilio (Bs)',
               type: 'number',
               defaultValue: 15,
               min: 0,
-              admin: { description: 'Ciudades de abajo.' },
+              admin: { description: 'Solo en las ciudades de abajo.' },
             },
-            { name: 'costoNacional', label: 'Envío al resto del país (Bs)', type: 'number', defaultValue: 35, min: 0 },
+            {
+              name: 'costoNacional',
+              label: 'Encomienda (Bs)',
+              type: 'number',
+              defaultValue: 35,
+              min: 0,
+              admin: { description: 'A cualquier ciudad; se recoge en la terminal.' },
+            },
             {
               name: 'gratisDesde',
               label: 'Envío gratis desde (Bs)',
@@ -57,17 +64,18 @@ export const Ajustes: GlobalConfig = {
         },
         {
           name: 'ciudadesLocales',
-          label: 'Ciudades con envío local',
+          label: 'Ciudades con envío a domicilio',
           type: 'select',
           hasMany: true,
           defaultValue: ['La Paz', 'El Alto'],
           options: CIUDADES.map((c) => ({ label: c, value: c })),
         },
         {
+          // (Se llama "recojo" por la versión anterior; hoy es la nota de encomiendas.)
           name: 'recojo',
-          label: 'Dirección de recojo',
+          label: 'Nota para encomiendas',
           type: 'text',
-          admin: { description: 'Si queda vacío, no se ofrece el recojo en tienda.' },
+          admin: { description: 'Se muestra al elegir encomienda. Ej.: "Despachamos al día hábil siguiente por la empresa que elijas."' },
         },
       ],
     },

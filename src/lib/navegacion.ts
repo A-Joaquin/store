@@ -1,25 +1,21 @@
 // Enlaces del menú, el mega menú, el menú móvil y el footer. Mismo orden y
 // mismos destinos que el sitio estático; las anclas de la portada pasan a
 // páginas reales cuando existen.
-// TODO: las páginas de tipo de prenda, guía de tallas, envíos y contacto aún no
-// existen; mientras tanto apuntan a donde apuntaba el sitio estático.
+// TODO: guía de tallas, envíos y contacto aún no existen; apuntan a "#" como
+// en el sitio estático.
 
 export type Enlace = { texto: string; href: string }
 
 export const MENU_PRINCIPAL: (Enlace & { columna: 'colecciones' | 'prendas' | 'whatice' })[] = [
   { texto: 'NUEVO', href: '/coleccion/preludio', columna: 'whatice' },
   { texto: 'COLECCIONES', href: '/#colecciones', columna: 'colecciones' },
-  { texto: 'PRENDAS', href: '/coleccion/preludio', columna: 'prendas' },
+  { texto: 'PRENDAS', href: '/categoria/poleras', columna: 'prendas' },
   { texto: 'MANIFIESTO', href: '/#manifiesto', columna: 'whatice' },
 ]
 
-// "tipo:<nombre del tipo de prenda>" elige una prenda al azar de ese tipo para
-// el recuadro destacado del mega menú.
-export const PRENDAS: (Enlace & { tipo: string })[] = [
-  { texto: 'Conjuntos', href: '/coleccion/track-club', tipo: 'Conjunto' },
-  { texto: 'Manga larga', href: '/coleccion/preludio', tipo: 'Manga Larga' },
-  { texto: 'Poleras', href: '/coleccion/archivo', tipo: 'Polera' },
-]
+// Categoría (tipo de prenda) para los menús: texto, página y el nombre del tipo
+// (con él se elige una prenda al azar para el recuadro del mega menú).
+export type CategoriaMenu = { texto: string; href: string; tipo: string }
 
 export const INFORMACION: Enlace[] = [
   { texto: 'MANIFIESTO', href: '/#manifiesto' },

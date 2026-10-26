@@ -12,7 +12,7 @@ import { MigasDatos, type Miga } from '@/components/Migas'
 import { cliente, getAjustes, getProducto, getProductos, getStock } from '@/lib/datos'
 import { precioBs } from '@/lib/formato'
 import { absoluta, comoMedia, srcPrincipal, urlCompartir } from '@/lib/imagen'
-import { MARCA, SITE_URL, rutaColeccion, rutaProducto } from '@/lib/sitio'
+import { MARCA, SITE_URL, rutaCategoria, rutaColeccion, rutaProducto } from '@/lib/sitio'
 import { aTarjeta } from '@/lib/tarjeta'
 import type { Coleccion, Producto } from '@/payload-types'
 
@@ -150,7 +150,11 @@ export default async function FichaProducto({ params }: Props) {
                     <Link href={rutaColeccion(coleccion.slug)}>{coleccion.nombre.toUpperCase()}</Link>
                   </li>
                 )}
-                {tipo?.categoria && <li>{tipo.categoria}</li>}
+                {tipo?.categoria && (
+                  <li>
+                    {tipo.slug ? <Link href={rutaCategoria(tipo.slug)}>{tipo.categoria}</Link> : tipo.categoria}
+                  </li>
+                )}
               </ol>
             </nav>
             {coleccion && <p className={s.categoria}>{coleccion.nombre.toUpperCase()}</p>}

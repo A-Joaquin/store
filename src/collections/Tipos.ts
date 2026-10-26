@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
+import { slugField } from '@/fields/slug'
 import { revalidarTodo } from '@/lib/revalidar'
 import { NOTA_MEDIDAS } from '@/lib/textos'
 
@@ -40,6 +41,14 @@ export const Tipos: CollectionConfig = {
           admin: { description: 'En plural, como se muestra en la tienda. Ej.: POLERAS' },
         },
       ],
+    },
+    // Dirección de la página de categoría: /categoria/<slug> (desde "Categoría").
+    slugField('categoria', { requerido: false }),
+    {
+      name: 'descripcion',
+      label: 'Texto de la página de categoría',
+      type: 'textarea',
+      admin: { description: 'Opcional. Se muestra al final del listado y ayuda en Google (120–250 palabras).' },
     },
     {
       name: 'material',

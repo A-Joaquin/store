@@ -20,11 +20,13 @@ const formatearSlug =
 
 // Es la dirección de la página (/producto/<slug>): cambiarla rompe los enlaces
 // ya compartidos e indexados, así que solo se genera si está vacía.
-export const slugField = (campoOrigen = 'nombre'): Field => ({
+// requerido: false solo al agregarlo a una colección que ya tiene filas (la
+// base no acepta una columna obligatoria vacía); el hook la llena igual.
+export const slugField = (campoOrigen = 'nombre', { requerido = true } = {}): Field => ({
   name: 'slug',
   label: 'Dirección (slug)',
   type: 'text',
-  required: true,
+  required: requerido,
   unique: true,
   index: true,
   admin: {

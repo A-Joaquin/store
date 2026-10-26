@@ -2,7 +2,7 @@ import type { CollectionConfig } from 'payload'
 import { APIError } from 'payload'
 
 import { liberar } from '@/lib/pedidos/stock'
-import { CIUDADES, ESTADOS, type EstadoPedido } from '@/lib/pedidos/estados'
+import { CIUDADES, ESTADOS, METODOS, type EstadoPedido } from '@/lib/pedidos/estados'
 
 // Pedidos de la fase 1: se crean desde la web (sin pago en línea), el stock
 // queda reservado y la venta se cierra por WhatsApp. El equipo mueve el
@@ -75,16 +75,35 @@ export const Pedidos: CollectionConfig = {
               label: 'Método',
               type: 'select',
               required: true,
-              defaultValue: 'envio',
-              options: [
-                { label: 'Envío a domicilio', value: 'envio' },
-                { label: 'Recojo en tienda', value: 'recojo' },
-              ],
+              defaultValue: 'domicilio',
+              options: METODOS.map((m) => ({ label: m.etiqueta, value: m.valor })),
             },
-            { name: 'ciudad', type: 'select', options: CIUDADES.map((c) => ({ label: c, value: c })) },
+            { name: 'ciudad', type: 'select', required: true, options: CIUDADES.map((c) => ({ label: c, value: c })) },
           ],
         },
-        { name: 'direccion', label: 'Dirección', type: 'textarea' },
+        {
+          type: 'row',
+          admin: { condition: (data) => data?.metodo === 'domicilio' },
+          fields: [
+            { name: 'direccion', label: 'Dirección', type: 'textarea' },
+            { name: 'referencia', label: 'Referencia', type: 'text' },
+          ],
+        },
+        {
+          type: 'row',
+          admin: { condition: (data) => data?.metodo === 'encomienda' },
+          fields: [
+            { name: 'empresa', label: 'Empresa de transporte', type: 'text' },
+            { name: 'recibeNombre', label: 'Recoge (nombre)', type: 'text' },
+            { name: 'recibeDocumento', label: 'Recoge (CI)', type: 'text' },
+          ],
+        },
+        {
+          name: 'guia',
+          label: 'N.º de guía / encomienda',
+          type: 'text',
+          admin: { description: 'Lo carga el equipo al despachar. El cliente lo ve en su seguimiento.' },
+        },
       ],
     },
     {

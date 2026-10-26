@@ -218,6 +218,14 @@ export interface Tipo {
    */
   categoria?: string | null;
   /**
+   * Se genera desde el nombre. Evita cambiarla una vez publicada.
+   */
+  slug?: string | null;
+  /**
+   * Opcional. Se muestra al final del listado y ayuda en Google (120–250 palabras).
+   */
+  descripcion?: string | null;
+  /**
    * Se muestra en MATERIAL si la prenda no tiene uno propio.
    */
   material: string;
@@ -244,26 +252,6 @@ export interface Tipo {
       }[]
     | null;
   nota?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "colecciones".
- */
-export interface Coleccion {
-  id: number;
-  nombre: string;
-  /**
-   * Se genera desde el nombre. Evita cambiarla una vez publicada.
-   */
-  slug: string;
-  /**
-   * Se muestra arriba del listado. 120–250 palabras ayudan a posicionar la colección en Google.
-   */
-  descripcion?: string | null;
-  imagen?: (number | null) | Media;
-  orden?: number | null;
   meta?: {
     title?: string | null;
     description?: string | null;
@@ -349,6 +337,34 @@ export interface Media {
   };
 }
 /**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "colecciones".
+ */
+export interface Coleccion {
+  id: number;
+  nombre: string;
+  /**
+   * Se genera desde el nombre. Evita cambiarla una vez publicada.
+   */
+  slug: string;
+  /**
+   * Se muestra arriba del listado. 120–250 palabras ayudan a posicionar la colección en Google.
+   */
+  descripcion?: string | null;
+  imagen?: (number | null) | Media;
+  orden?: number | null;
+  meta?: {
+    title?: string | null;
+    description?: string | null;
+    /**
+     * Maximum upload file size: 12MB. Recommended file size for images is <500KB.
+     */
+    image?: (number | null) | Media;
+  };
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * Unidades disponibles por talla. Los pedidos pendientes ya están descontados (reservados). Stock bajo: 2 o menos.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -378,22 +394,27 @@ export interface Pedido {
   email?: string | null;
   documento?: string | null;
   razonSocial?: string | null;
-  metodo: 'envio' | 'recojo';
-  ciudad?:
-    | (
-        | 'La Paz'
-        | 'El Alto'
-        | 'Cochabamba'
-        | 'Santa Cruz'
-        | 'Oruro'
-        | 'Potosí'
-        | 'Sucre'
-        | 'Tarija'
-        | 'Trinidad'
-        | 'Cobija'
-      )
-    | null;
+  metodo: 'domicilio' | 'encomienda';
+  ciudad:
+    | 'La Paz'
+    | 'El Alto'
+    | 'Cochabamba'
+    | 'Santa Cruz'
+    | 'Oruro'
+    | 'Potosí'
+    | 'Sucre'
+    | 'Tarija'
+    | 'Trinidad'
+    | 'Cobija';
   direccion?: string | null;
+  referencia?: string | null;
+  empresa?: string | null;
+  recibeNombre?: string | null;
+  recibeDocumento?: string | null;
+  /**
+   * Lo carga el equipo al despachar. El cliente lo ve en su seguimiento.
+   */
+  guia?: string | null;
   items: {
     producto: number | Producto;
     nombre: string;
@@ -612,6 +633,8 @@ export interface ColeccionesSelect<T extends boolean = true> {
 export interface TiposSelect<T extends boolean = true> {
   nombre?: T;
   categoria?: T;
+  slug?: T;
+  descripcion?: T;
   material?: T;
   columnas?:
     | T
@@ -630,6 +653,13 @@ export interface TiposSelect<T extends boolean = true> {
         id?: T;
       };
   nota?: T;
+  meta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        image?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
 }
@@ -660,6 +690,11 @@ export interface PedidosSelect<T extends boolean = true> {
   metodo?: T;
   ciudad?: T;
   direccion?: T;
+  referencia?: T;
+  empresa?: T;
+  recibeNombre?: T;
+  recibeDocumento?: T;
+  guia?: T;
   items?:
     | T
     | {
@@ -880,9 +915,12 @@ export interface Ajustes {
   email?: string | null;
   envios?: {
     /**
-     * Ciudades de abajo.
+     * Solo en las ciudades de abajo.
      */
     costoLocal?: number | null;
+    /**
+     * A cualquier ciudad; se recoge en la terminal.
+     */
     costoNacional?: number | null;
     /**
      * 0 = nunca gratis.
@@ -903,7 +941,7 @@ export interface Ajustes {
         )[]
       | null;
     /**
-     * Si queda vacío, no se ofrece el recojo en tienda.
+     * Se muestra al elegir encomienda. Ej.: "Despachamos al día hábil siguiente por la empresa que elijas."
      */
     recojo?: string | null;
   };

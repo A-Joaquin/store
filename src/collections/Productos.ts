@@ -1,7 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { slugField } from '@/fields/slug'
-import { revalidar } from '@/lib/revalidar'
+import { revalidarTodo } from '@/lib/revalidar'
 
 export const TALLAS = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'Única'] as const
 
@@ -157,13 +157,9 @@ export const Productos: CollectionConfig = {
     },
   ],
   hooks: {
-    afterChange: [
-      ({ doc, previousDoc }) => {
-        const rutas = ['/', `/producto/${doc.slug}`, '/sitemap.xml']
-        if (previousDoc?.slug && previousDoc.slug !== doc.slug) rutas.push(`/producto/${previousDoc.slug}`)
-        revalidar(...rutas)
-      },
-    ],
-    afterDelete: [({ doc }) => revalidar('/', `/producto/${doc.slug}`, '/sitemap.xml')],
+    // La prenda sale en su ficha, la portada, su colección, su categoría (con
+    // paginación), los menús y el sitemap: se regenera todo.
+    afterChange: [() => revalidarTodo()],
+    afterDelete: [() => revalidarTodo()],
   },
 }

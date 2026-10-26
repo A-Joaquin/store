@@ -7,7 +7,7 @@ import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 
 import { useCarrito } from '@/components/carrito/Carrito'
 import { precioBs } from '@/lib/formato'
-import { INFORMACION, MENU_PRINCIPAL, PRENDAS, TAGLINE, type PrendaMenu } from '@/lib/navegacion'
+import { INFORMACION, MENU_PRINCIPAL, TAGLINE, type CategoriaMenu, type PrendaMenu } from '@/lib/navegacion'
 import { rutaColeccion, rutaProducto } from '@/lib/sitio'
 
 import s from './MenuMovil.module.css'
@@ -41,11 +41,12 @@ export function useMenuMovil() {
 
 type Props = {
   colecciones: { nombre: string; slug: string }[]
+  categorias: CategoriaMenu[]
   prendas: PrendaMenu[]
   redes: { instagram?: string | null; tiktok?: string | null; whatsapp?: string | null }
 }
 
-export function MenuMovil({ colecciones, prendas, redes }: Props) {
+export function MenuMovil({ colecciones, categorias, prendas, redes }: Props) {
   const { abierto, semilla, cerrar } = useMenuMovil()
   const carrito = useCarrito()
 
@@ -94,7 +95,7 @@ export function MenuMovil({ colecciones, prendas, redes }: Props) {
           PRENDAS
         </p>
         <div className={s.fila} style={{ '--i': 6 } as React.CSSProperties}>
-          {PRENDAS.map((e) => (
+          {categorias.map((e) => (
             <Link key={e.texto} href={e.href} tabIndex={tab}>
               {e.texto}
             </Link>

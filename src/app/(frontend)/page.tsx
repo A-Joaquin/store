@@ -6,9 +6,9 @@ import { Hero } from '@/components/portada/Hero'
 import { Intro } from '@/components/portada/Intro'
 import { Presentacion } from '@/components/portada/Presentacion'
 import { Divisor, Interludio, Manifiesto } from '@/components/portada/Secciones'
-import { getColecciones, getPortada, getProductos, getStock } from '@/lib/datos'
+import { getColecciones, getPortada } from '@/lib/datos'
+import { EN_PORTADA, prendasPaginadas } from '@/lib/listados'
 import { MARCA, rutaColeccion } from '@/lib/sitio'
-import { aTarjeta } from '@/lib/tarjeta'
 
 export const metadata: Metadata = {
   alternates: { canonical: '/' },
@@ -16,8 +16,8 @@ export const metadata: Metadata = {
 
 export default async function Inicio() {
   const [portada, colecciones] = await Promise.all([getPortada(), getColecciones()])
-  const prendasPorColeccion = await Promise.all(colecciones.map((c) => getProductos({ coleccion: c.id })))
-  const stock = await getStock(prendasPorColeccion.flat().map((p) => p.id))
+  // Cada colección muestra sus primeras prendas; el resto, en su página.
+  const bloques = await Promise.all(colecciones.map((c) => prendasPaginadas({ coleccion: c.id }, 1, EN_PORTADA)))
 
   return (
     <>
@@ -35,7 +35,8 @@ export default async function Inicio() {
           <BloqueColeccion
             id={c.slug}
             titulo={c.nombre}
-            prendas={prendasPorColeccion[i].map((p) => aTarjeta(p, stock))}
+            prendas={bloques[i].prendas}
+            total={bloques[i].total}
             verTodo={rutaColeccion(c.slug)}
           />
         </Fragment>

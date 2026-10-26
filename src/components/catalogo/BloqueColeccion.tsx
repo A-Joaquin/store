@@ -10,6 +10,8 @@ type Props = {
   id?: string
   titulo: string
   prendas: PrendaTarjeta[]
+  // Total de prendas (con paginación o en la portada se muestran menos).
+  total?: number
   // Enlace "VER TODO →" (en la portada lleva a la página de la colección).
   verTodo?: string
   // En la página de colección el título es el h1.
@@ -18,7 +20,7 @@ type Props = {
   prioridad?: number
 }
 
-export function BloqueColeccion({ id, titulo, prendas, verTodo, tituloComoH1, prioridad = 0 }: Props) {
+export function BloqueColeccion({ id, titulo, prendas, total = prendas.length, verTodo, tituloComoH1, prioridad = 0 }: Props) {
   const Titulo = tituloComoH1 ? 'h1' : 'h2'
   return (
     <section className={s.bloque} id={id} aria-label={titulo}>
@@ -26,7 +28,7 @@ export function BloqueColeccion({ id, titulo, prendas, verTodo, tituloComoH1, pr
         <div className={s.cabeza}>
           <Titulo className={s.titulo}>{titulo}</Titulo>
           <p className={s.cantidad}>
-            {prendas.length} {prendas.length === 1 ? 'PRENDA' : 'PRENDAS'}
+            {total} {total === 1 ? 'PRENDA' : 'PRENDAS'}
           </p>
         </div>
         {prendas.map((p, i) => (

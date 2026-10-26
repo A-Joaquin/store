@@ -17,7 +17,7 @@ import { Tipos } from './collections/Tipos'
 import { Users } from './collections/Users'
 import { Ajustes } from './globals/Ajustes'
 import { Portada } from './globals/Portada'
-import { MARCA, SITE_URL, rutaColeccion, rutaProducto } from './lib/sitio'
+import { MARCA, SITE_URL, rutaCategoria, rutaColeccion, rutaProducto } from './lib/sitio'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -60,15 +60,20 @@ export default buildConfig({
   sharp,
   plugins: [
     seoPlugin({
-      collections: ['productos', 'colecciones'],
+      collections: ['productos', 'colecciones', 'tipos'],
       uploadsCollection: 'media',
       tabbedUI: true,
-      generateTitle: ({ doc }) => `${doc?.nombre ?? ''} | ${MARCA}`,
+      generateTitle: ({ doc, collectionSlug }) =>
+        `${collectionSlug === 'tipos' ? (doc?.categoria ?? doc?.nombre ?? '') : (doc?.nombre ?? '')} | ${MARCA}`,
       generateDescription: ({ doc }) => String(doc?.descripcion ?? '').slice(0, 155),
       generateImage: ({ doc }) => primeraImagen(doc?.galeria ?? [doc?.imagen]),
       generateURL: ({ doc, collectionSlug }) =>
         SITE_URL +
-        (collectionSlug === 'colecciones' ? rutaColeccion(doc?.slug ?? '') : rutaProducto(doc?.slug ?? '')),
+        (collectionSlug === 'colecciones'
+          ? rutaColeccion(doc?.slug ?? '')
+          : collectionSlug === 'tipos'
+            ? rutaCategoria(doc?.slug ?? '')
+            : rutaProducto(doc?.slug ?? '')),
     }),
     s3Storage({
       enabled: usarR2,
