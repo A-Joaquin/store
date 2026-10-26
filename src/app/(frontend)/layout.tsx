@@ -49,7 +49,7 @@ export async function generateMetadata(): Promise<Metadata> {
       description: descripcion,
     },
     twitter: { card: 'summary_large_image' },
-    icons: { icon: '/logo-ojo-negro.svg' },
+    icons: { icon: '/logo-ojo-negro.svg', apple: '/apple-touch-icon.png' },
   }
 }
 
