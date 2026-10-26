@@ -110,214 +110,23 @@ textarea {
   outline-offset: 2px;
 }
 
-/* ===== Provisional: páginas aún no migradas al diseño final =====
-   Se borra cada bloque al migrar su página (MIGRACION.md, fase 1). */
-.provisional {
-  padding: 140px var(--gutter) 64px;
-  font-size: 13px;
-  line-height: 1.5;
-}
-.provisional h1,
-.provisional h2 {
-  font-family: var(--display);
-}
-.provisional h1 {
-  font-size: clamp(38px, 4vw, 56px);
-}
-.provisional h2 {
-  font-size: 32px;
-}
-
-.hero {
-  position: relative;
-  margin: -140px calc(var(--gutter) * -1) 0;
-}
-.hero__img {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
-}
-@media (max-width: 767px) {
-  .hero__img {
-    aspect-ratio: 3 / 4;
-  }
-}
-.hero__titulo {
-  position: absolute;
-  left: var(--gutter);
-  bottom: 24px;
-  font-family: var(--display);
-  font-size: clamp(32px, 6vw, 72px);
-}
-.manifiesto {
-  max-width: 60ch;
-  margin: 48px auto;
-  text-align: center;
-}
-.colecciones {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin: 32px 0;
-}
-.grilla {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px 12px;
-}
-@media (min-width: 768px) {
-  .grilla {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-@media (min-width: 1200px) {
-  .grilla {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-.tarjeta__foto img {
-  width: 100%;
-  aspect-ratio: 2 / 3;
-  object-fit: cover;
-}
-.tarjeta__nombre {
-  margin: 8px 0 0;
-  font-family: var(--display);
-  font-size: 19px;
-  font-weight: 400;
-  text-align: center;
-}
-.tarjeta__precio,
-.ficha__precio {
-  margin: 4px 0 0;
-  color: #888;
-  text-align: center;
-}
-.migas {
-  margin: 16px 0;
-  font-size: 11px;
-  letter-spacing: 1px;
-  color: #888;
-}
+/* Migas de pan visibles (página de colección): "INICIO > PRELUDIO >" */
 .migas ol {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-}
-.migas li + li::before {
-  content: '>';
-  margin-right: 8px;
-}
-.ficha {
-  display: grid;
-  gap: 32px;
-}
-@media (min-width: 900px) {
-  .ficha {
-    grid-template-columns: 3fr 2fr;
-  }
-  .ficha > .migas,
-  .ficha__relacionados {
-    grid-column: 1 / -1;
-  }
-  .ficha__panel {
-    position: sticky;
-    top: 120px;
-    align-self: start;
-  }
-}
-.ficha__galeria {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 8px;
-}
-.ficha__galeria img {
-  width: 100%;
-  aspect-ratio: 2 / 3;
-  object-fit: contain;
-  background-color: #f2f0ea;
-}
-.ficha__galeria img:first-child {
-  grid-column: 1 / -1;
-}
-.ficha__coleccion {
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-.ficha__color {
-  margin: 16px 0 0;
-}
-.pedido__tallas {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin: 24px 0;
-  padding: 0;
-  border: 0;
-}
-.pedido__tallas input {
-  position: absolute;
-  opacity: 0;
-}
-.pedido__tallas span {
-  display: inline-block;
-  min-width: 48px;
-  padding: 10px 12px;
-  border: 1px solid #cfccc4;
-  text-align: center;
-  cursor: pointer;
-}
-.pedido__tallas input:checked + span {
-  background: var(--ink);
-  color: #fff;
-}
-.pedido__tallas .agotada span {
-  opacity: 0.4;
-  text-decoration: line-through;
-}
-.boton {
-  display: inline-block;
-  padding: 18px 40px;
-  background: #000;
-  color: #fff;
-  font-size: 12px;
-  letter-spacing: 1.2px;
-}
-.boton[aria-disabled='true'] {
-  opacity: 0.5;
-}
-.acordeones {
-  margin-top: 32px;
-}
-.acordeon {
-  padding: 12px 0;
-}
-.acordeon summary {
-  cursor: pointer;
-  font-size: 13px;
-  letter-spacing: 1.3px;
-  text-transform: uppercase;
-}
-.tabla-medidas {
-  width: 100%;
-  margin-top: 12px;
-  border-collapse: collapse;
-  font-size: 12px;
-  text-align: center;
-}
-.tabla-medidas th,
-.tabla-medidas td {
-  padding: 8px 4px;
-  border-bottom: 1px solid #e3e0d8;
-}
-.tabla-medidas__nota {
-  font-size: 10px;
+  font-size: 11px;
+  line-height: 1.2;
+  letter-spacing: 1.1px;
   color: #888;
 }
-.no-encontrado {
-  padding: 96px 0;
-  text-align: center;
+.migas li {
+  padding-right: 5px;
+}
+.migas li::after {
+  content: ' >';
+}
+.migas a:hover {
+  color: #000;
 }
 
 @media (prefers-reduced-motion: reduce) {

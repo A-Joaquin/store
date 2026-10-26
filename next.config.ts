@@ -15,6 +15,10 @@ const anteriores: Record<string, string> = fs.existsSync(archivoRedirecciones)
   : {}
 
 const nextConfig: NextConfig = {
+  // 404 propia para direcciones sin ruta (hay dos layouts raíz: tienda y panel).
+  experimental: {
+    globalNotFound: true,
+  },
   async redirects() {
     return [
       { source: '/index.html', destination: '/', permanent: true },

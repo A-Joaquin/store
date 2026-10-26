@@ -12,11 +12,13 @@
   line-height: 1.15;
   color: #000;
 }
+/* El relleno amplía la zona del efecto magnético (~60 px, como el original)
+   sin mover el contenido, que sigue centrado en el mismo punto. */
 .item {
   position: absolute;
   left: 0;
   transform: translate(-50%, -50%);
-  padding: 0;
+  padding: 20px;
   border: 0;
   background: none;
   color: inherit;
@@ -43,6 +45,10 @@
 .cuenta {
   top: 157.5px;
   margin-left: -3px;
+}
+
+.iman {
+  display: block;
 }
 
 /* Texto girado 90° (se lee de arriba hacia abajo). */

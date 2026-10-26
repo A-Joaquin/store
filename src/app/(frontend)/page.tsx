@@ -3,6 +3,7 @@ import { Fragment } from 'react'
 
 import { BloqueColeccion } from '@/components/catalogo/BloqueColeccion'
 import { Hero } from '@/components/portada/Hero'
+import { Intro } from '@/components/portada/Intro'
 import { Presentacion } from '@/components/portada/Presentacion'
 import { Divisor, Interludio, Manifiesto } from '@/components/portada/Secciones'
 import { getColecciones, getPortada, getProductos } from '@/lib/datos'
@@ -22,6 +23,7 @@ export default async function Inicio() {
       {/* Un solo h1 por página; en la portada lo ocupa la marca. */}
       <h1 className="solo-lectores">{MARCA} — streetwear de Bolivia</h1>
 
+      <Intro />
       <Hero hero={portada.hero} />
 
       <Presentacion colecciones={colecciones.map((c) => ({ nombre: c.nombre, slug: c.slug }))} />

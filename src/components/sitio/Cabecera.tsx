@@ -7,6 +7,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 import { useCarrito } from '@/components/carrito/Carrito'
 import { INFORMACION, MENU_PRINCIPAL, PRENDAS, type PrendaMenu } from '@/lib/navegacion'
 import { rutaColeccion, rutaProducto } from '@/lib/sitio'
+import { useMagnetico } from '@/lib/useMagnetico'
 
 import s from './Cabecera.module.css'
 import { Instagram, TikTok, WhatsApp } from './Iconos'
@@ -47,6 +48,7 @@ export function Cabecera({ colecciones, prendas, destacada, redes }: Props) {
     setPanelEn((typeof abrir === 'function' ? abrir(panel) : abrir) ? ruta : null)
   const setMega = useCallback((col: Columna | null) => setMegaEn(col ? { ruta, col } : null), [ruta])
   const megaRef = useRef<HTMLDivElement>(null)
+  const [refIman, zonaIman] = useMagnetico<HTMLSpanElement>()
   const temporizador = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   // Logo grande solo arriba del todo; al bajar se achica.
@@ -228,13 +230,14 @@ export function Cabecera({ colecciones, prendas, destacada, redes }: Props) {
             className={s.hamburguesa}
             aria-label={panel ? 'Cerrar menú' : 'Abrir menú'}
             aria-expanded={panel}
+            {...zonaIman}
             onClick={() => {
               // En móvil la hamburguesa abre el menú a pantalla completa.
               if (window.matchMedia(ESCRITORIO).matches) setPanel((a) => !a)
               else menuMovil.abrir()
             }}
           >
-            <span className={s.icono}>
+            <span ref={refIman} className={s.icono}>
               <span className={s.cruz} />
             </span>
           </button>

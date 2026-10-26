@@ -1,0 +1,57 @@
+/* Intro negra de la portada (misma secuencia que el sitio estático):
+   0–1 s aparece el wordmark, 1–2 s se va, 2–3 s se desvanece la capa.
+   Curva Power2.easeIn, la del original. Funciona solo con CSS. */
+.intro {
+  position: fixed;
+  inset: 0;
+  z-index: 5000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--ink);
+  animation: capa 3s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
+}
+.logo {
+  width: 260px;
+  height: auto;
+  opacity: 0;
+  animation: logo 2s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
+}
+@keyframes logo {
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes capa {
+  0%,
+  66.6% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* Visita repetida (menos de una hora): solo un fundido corto. */
+.rapida {
+  animation: capa-rapida 0.2s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
+}
+.rapida .logo {
+  animation: none;
+}
+@keyframes capa-rapida {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro {
+    display: none;
+  }
+}
