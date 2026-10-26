@@ -30,7 +30,7 @@
 .wordmark {
   grid-column: 2;
   align-self: end;
-  width: min(320px, 60vw);
+  width: min(240px, 60vw);
   height: auto;
 }
 .tagline {
@@ -249,7 +249,7 @@
     padding-right: 18px;
   }
   .wordmark {
-    width: min(210px, 52vw);
+    width: min(170px, 46vw);
   }
   .tagline {
     margin-top: 8px;
