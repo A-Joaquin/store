@@ -15,10 +15,10 @@ export function BarraLateral() {
   const [refCuenta, zonaCuenta] = useMagnetico<HTMLSpanElement>()
 
   return (
-    <div className={s.lateral}>
+    <div className={s.lateral} data-contraste-ignorar>
       {/* TODO: búsqueda (fase 1, pendiente). */}
       <button type="button" className={`${s.item} ${s.buscar}`} aria-label="Buscar" {...zonaBuscar}>
-        <span ref={refBuscar} className={s.iman}>
+        <span ref={refBuscar} className={s.iman} data-contraste>
           <Lupa />
         </span>
       </button>
@@ -29,19 +29,19 @@ export function BarraLateral() {
         aria-label={`Bolsa: ${carrito.cantidad}`}
         {...zonaBolsa}
       >
-        <span ref={refBolsa} className={s.iman}>
+        <span ref={refBolsa} className={s.iman} data-contraste>
           <span className={s.vertical}>
             BOLSA<span className={s.burbuja}>{carrito.cantidad}</span>
           </span>
         </span>
       </button>
       <a href="#" className={`${s.item} ${s.favoritos}`} {...zonaFavoritos}>
-        <span ref={refFavoritos} className={s.iman}>
+        <span ref={refFavoritos} className={s.iman} data-contraste>
           <span className={`${s.vertical} ${c.tachado}`}>FAVORITOS</span>
         </span>
       </a>
       <a href="#" className={`${s.item} ${s.cuenta}`} {...zonaCuenta}>
-        <span ref={refCuenta} className={s.iman}>
+        <span ref={refCuenta} className={s.iman} data-contraste>
           <span className={`${s.vertical} ${c.tachado}`}>CUENTA</span>
         </span>
       </a>

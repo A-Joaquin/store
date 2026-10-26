@@ -106,6 +106,9 @@ export function HeroSlider({ slides, children }: Props) {
     <section className={s.hero} aria-roledescription="carrusel" aria-label="Campaña">
       <div
         className={s.fotos}
+        // Foto del slide actual: el header la usa para decidir si va en blanco.
+        data-fuente={slides[actual].foto.src}
+        data-fuente-movil={slides[actual].foto.srcMovil ?? undefined}
         onPointerDown={(e) => {
           if (e.button !== 0) return
           arrastre.current = { x: e.clientX, dx: 0 }

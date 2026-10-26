@@ -9,6 +9,7 @@ import { JsonLd } from '@/components/JsonLd'
 import { AvisoCookies } from '@/components/sitio/AvisoCookies'
 import { BarraLateral } from '@/components/sitio/BarraLateral'
 import { Cabecera } from '@/components/sitio/Cabecera'
+import { ContrasteAuto } from '@/components/sitio/ContrasteAuto'
 import { MenuMovil, MenuMovilProvider } from '@/components/sitio/MenuMovil'
 import { Pie } from '@/components/sitio/Pie'
 import { getAjustes, getCategorias, getColecciones, getPrendasMenu } from '@/lib/datos'
@@ -89,6 +90,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
               <Pie redes={redes} />
               <AvisoCookies />
+              <ContrasteAuto />
             </VistaRapidaProvider>
           </MenuMovilProvider>
         </CarritoProvider>

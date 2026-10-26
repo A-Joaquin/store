@@ -28,7 +28,7 @@ export function AvisoCookies() {
   )
   if (ok) return null
   return (
-    <div className={s.aviso} role="region" aria-label="Aviso de cookies">
+    <div className={s.aviso} role="region" aria-label="Aviso de cookies" data-contraste-ignorar>
       <p>
         Usamos{' '}
         <a href="#" className={s.enlace}>

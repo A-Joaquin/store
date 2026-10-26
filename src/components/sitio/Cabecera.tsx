@@ -135,7 +135,7 @@ export function Cabecera({ colecciones, categorias, prendas, destacada, redes }:
   ]
 
   return (
-    <header className={clases}>
+    <header className={clases} data-contraste-ignorar data-mega-abierto={mega ? '' : undefined}>
       <div className={s.mega} ref={megaRef} aria-hidden={!mega}>
         <div className={s.megaInner}>
           <div className={s.megaMarca}>
@@ -207,19 +207,19 @@ export function Cabecera({ colecciones, categorias, prendas, destacada, redes }:
       </div>
 
       <div className={s.cabeza}>
-        <Link href="/" className={s.logo} aria-label="WHATICE, inicio">
+        <Link href="/" className={s.logo} aria-label="WHATICE, inicio" data-contraste>
           {/* eslint-disable-next-line @next/next/no-img-element -- SVG estático */}
           <img src="/wordmark-negro.svg" alt="WHATICE" width={190} height={57} />
         </Link>
         <div className={s.envoltura}>
-          <button type="button" className={s.bolsaMovil} onClick={carrito.alternar} aria-label={`Bolsa: ${carrito.cantidad}`}>
+          <button type="button" className={s.bolsaMovil} data-contraste onClick={carrito.alternar} aria-label={`Bolsa: ${carrito.cantidad}`}>
             BOLSA <span className={s.burbuja}>{carrito.cantidad}</span>
           </button>
           <nav className={s.nav} aria-label="Principal">
             <ul className={s.menu}>
               {MENU_PRINCIPAL.map((e) => (
                 <li key={e.texto} onMouseEnter={() => abrirMega(e.columna)}>
-                  <Link href={e.href} className={s.tachado} onClick={cerrarMega} onFocus={() => abrirMega(e.columna)}>
+                  <Link href={e.href} className={s.tachado} data-contraste onClick={cerrarMega} onFocus={() => abrirMega(e.columna)}>
                     {e.texto}
                   </Link>
                 </li>
@@ -238,7 +238,7 @@ export function Cabecera({ colecciones, categorias, prendas, destacada, redes }:
               else menuMovil.abrir()
             }}
           >
-            <span ref={refIman} className={s.icono}>
+            <span ref={refIman} className={s.icono} data-contraste>
               <span className={s.cruz} />
             </span>
           </button>

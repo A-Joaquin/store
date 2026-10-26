@@ -71,7 +71,7 @@ export function MenuMovil({ colecciones, categorias, prendas, redes }: Props) {
   const tab = abierto ? 0 : -1
 
   return (
-    <div className={`${s.menu} ${abierto ? s.abierto : ''}`} aria-hidden={!abierto} role="dialog" aria-label="Menú">
+    <div className={`${s.menu} ${abierto ? s.abierto : ''}`} aria-hidden={!abierto} role="dialog" aria-label="Menú" data-contraste-ignorar>
       <div className={s.arriba}>
         <Link className={s.logo} href="/" tabIndex={tab}>
           {/* eslint-disable-next-line @next/next/no-img-element -- SVG estático */}

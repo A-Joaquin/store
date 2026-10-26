@@ -486,3 +486,9 @@
     transition: none !important;
   }
 }
+
+/* Sobre fondo oscuro (ContrasteAuto): burbuja blanca con número negro. */
+[data-oscuro] .burbuja {
+  background: #fff;
+  color: var(--ink);
+}
