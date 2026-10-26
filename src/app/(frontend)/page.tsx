@@ -35,7 +35,7 @@ export default async function Inicio() {
       {portada.manifiesto && <p className="manifiesto">{portada.manifiesto}</p>}
 
       {colecciones.length > 0 && (
-        <nav aria-label="Colecciones" className="colecciones">
+        <nav aria-label="Colecciones" className="colecciones" id="colecciones">
           {colecciones.map((c) => (
             <Link key={c.id} href={rutaColeccion(c.slug)}>
               {c.nombre}

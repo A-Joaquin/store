@@ -1,12 +1,32 @@
 import { withPayload } from '@payloadcms/next/withPayload'
 import type { NextConfig } from 'next'
+import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
 const __filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(__filename)
 
+// Direcciones del sitio estático -> nuevas (las genera scripts/migrar-sitio-anterior.ts).
+// 301 para no perder los enlaces ya compartidos ni lo que Google tenga indexado.
+const archivoRedirecciones = path.resolve(dirname, 'redirecciones-sitio-anterior.json')
+const anteriores: Record<string, string> = fs.existsSync(archivoRedirecciones)
+  ? JSON.parse(fs.readFileSync(archivoRedirecciones, 'utf8'))
+  : {}
+
 const nextConfig: NextConfig = {
+  async redirects() {
+    return [
+      { source: '/index.html', destination: '/', permanent: true },
+      ...Object.entries(anteriores).map(([id, slug]) => ({
+        source: '/producto.html',
+        has: [{ type: 'query' as const, key: 'id', value: id }],
+        destination: `/producto/${slug}`,
+        permanent: true,
+      })),
+      { source: '/producto.html', destination: '/', permanent: true },
+    ]
+  },
   images: {
     localPatterns: [
       {
