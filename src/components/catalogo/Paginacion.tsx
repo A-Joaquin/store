@@ -23,14 +23,23 @@ type Props = {
   // Con alCambiar, cambia de página en el lugar (portada); sin él, son
   // enlaces a /…/pagina/n (páginas de colección y categoría).
   alCambiar?: (n: number) => void
+  // Se llama al pasar el mouse (o enfocar) un número: para precargar esa página.
+  alPrecargar?: (n: number) => void
 }
 
-export function Paginacion({ base, pagina, total, alCambiar }: Props) {
+export function Paginacion({ base, pagina, total, alCambiar, alPrecargar }: Props) {
   if (total <= 1) return null
 
   const destino = (n: number, contenido: React.ReactNode, props: { className?: string; rel?: string; label?: string } = {}) =>
     alCambiar ? (
-      <button type="button" className={`${s.boton} ${props.className ?? ''}`} onClick={() => alCambiar(n)} aria-label={props.label}>
+      <button
+        type="button"
+        className={`${s.boton} ${props.className ?? ''}`}
+        onClick={() => alCambiar(n)}
+        onPointerEnter={() => alPrecargar?.(n)}
+        onFocus={() => alPrecargar?.(n)}
+        aria-label={props.label}
+      >
         {contenido}
       </button>
     ) : (
