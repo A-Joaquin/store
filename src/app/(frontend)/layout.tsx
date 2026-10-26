@@ -1,15 +1,23 @@
 import type { Metadata, Viewport } from 'next'
-import { Pirata_One } from 'next/font/google'
-import Link from 'next/link'
+import { Figtree, Pirata_One } from 'next/font/google'
 import React from 'react'
 
+import { CajonCarrito } from '@/components/carrito/CajonCarrito'
+import { CarritoProvider } from '@/components/carrito/Carrito'
 import { JsonLd } from '@/components/JsonLd'
-import { getAjustes, getColecciones } from '@/lib/datos'
-import { MARCA, SITE_URL, rutaColeccion } from '@/lib/sitio'
+import { BarraLateral } from '@/components/sitio/BarraLateral'
+import { Cabecera } from '@/components/sitio/Cabecera'
+import { MenuMovil, MenuMovilProvider } from '@/components/sitio/MenuMovil'
+import { Pie } from '@/components/sitio/Pie'
+import { getAjustes, getColecciones, getPrendasMenu } from '@/lib/datos'
+import { MARCA, SITE_URL } from '@/lib/sitio'
 
 import './globals.css'
 
-// Auto-alojada por Next: sin petición a Google Fonts y sin salto de texto al cargar.
+// Auto-alojadas por Next: sin petición a Google Fonts y sin salto de texto al cargar.
+// Figtree reemplaza a Avenir Next (fuente comercial del tema de referencia):
+// es la alternativa libre más parecida en forma y ancho (±1,6 %).
+const sans = Figtree({ subsets: ['latin'], display: 'swap', variable: '--font-sans' })
 const display = Pirata_One({ weight: '400', subsets: ['latin'], display: 'swap', variable: '--font-display' })
 
 const DESCRIPCION_BASE = 'Streetwear boliviano: poleras, manga larga y conjuntos Track de edición limitada.'
@@ -36,55 +44,44 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#0a0a0b',
+  themeColor: '#ffffff',
   width: 'device-width',
   initialScale: 1,
 }
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const [ajustes, colecciones] = await Promise.all([getAjustes(), getColecciones()])
-  const redes = Object.values(ajustes.redes ?? {}).filter((r): r is string => typeof r === 'string' && r.length > 0)
+  const [ajustes, colecciones, prendas] = await Promise.all([getAjustes(), getColecciones(), getPrendasMenu()])
+  const whatsapp = ajustes.whatsapp?.replace(/\D/g, '') || null
+  const redes = {
+    instagram: ajustes.redes?.instagram,
+    tiktok: ajustes.redes?.tiktok,
+    whatsapp: whatsapp ? `https://wa.me/${whatsapp}` : null,
+  }
+  const sameAs = [ajustes.redes?.instagram, ajustes.redes?.tiktok, ajustes.redes?.facebook].filter(
+    (r): r is string => typeof r === 'string' && r.length > 0,
+  )
+  const listaColecciones = colecciones.map((c) => ({ nombre: c.nombre, slug: c.slug }))
+  // Mismo recuadro inicial que el sitio estático: la chaqueta Track Reliquia.
+  const destacada = prendas.find((p) => p.slug === 'chaqueta-track-reliquia') ?? prendas.find((p) => p.imagen) ?? null
 
   return (
-    <html lang="es-BO" className={display.variable}>
+    <html lang="es-BO" className={`${sans.variable} ${display.variable}`}>
       <body>
-        <a href="#contenido" className="saltar">
-          Ir al contenido
-        </a>
-        <header className="cabecera">
-          <Link href="/" className="cabecera__logo" aria-label={`${MARCA}, inicio`}>
-            {/* eslint-disable-next-line @next/next/no-img-element -- SVG estático, no necesita optimización */}
-            <img src="/wordmark.svg" alt={MARCA} width={190} height={40} />
-          </Link>
-          <nav aria-label="Colecciones">
-            <ul className="cabecera__menu">
-              {colecciones.map((c) => (
-                <li key={c.id}>
-                  <Link href={rutaColeccion(c.slug)}>{c.nombre}</Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </header>
+        <CarritoProvider>
+          <MenuMovilProvider>
+            <a href="#contenido" className="saltar">
+              Ir al contenido
+            </a>
+            <Cabecera colecciones={listaColecciones} prendas={prendas} destacada={destacada} redes={redes} />
+            <BarraLateral />
+            <MenuMovil colecciones={listaColecciones} prendas={prendas} redes={redes} />
+            <CajonCarrito whatsapp={whatsapp} />
 
-        <main id="contenido">{children}</main>
+            <main id="contenido">{children}</main>
 
-        <footer className="pie">
-          <p>
-            © {new Date().getFullYear()} {MARCA}
-          </p>
-          {redes.length > 0 && (
-            <ul className="pie__redes">
-              {redes.map((r) => (
-                <li key={r}>
-                  <a href={r} rel="noopener noreferrer" target="_blank">
-                    {new URL(r).hostname.replace(/^www\./, '')}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          )}
-        </footer>
+            <Pie redes={redes} />
+          </MenuMovilProvider>
+        </CarritoProvider>
 
         <JsonLd
           datos={{
@@ -97,7 +94,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 url: SITE_URL,
                 logo: `${SITE_URL}/logo-ojo-negro.svg`,
                 ...(ajustes.email && { email: ajustes.email }),
-                ...(redes.length > 0 && { sameAs: redes }),
+                ...(sameAs.length > 0 && { sameAs }),
               },
               {
                 '@type': 'WebSite',

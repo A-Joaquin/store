@@ -1,10 +1,12 @@
-/* Base provisional: tokens de la marca y layout mínimo. Al migrar el diseño
-   (fase 1, inventario §3) cada componente pasa a su propio CSS Module. */
+/* Base global: reset, tokens de la marca y tipografía. Cada componente tiene
+   su propio CSS Module; aquí solo va lo que comparten todos. */
 :root {
   --ink: #0a0a0b;
   --bone: #e8e4dc;
   --steel: #8a8f98;
   --ice: #a9c7e3;
+  --ice-dark: #5d87ad;
+  --sans: var(--font-sans), 'Helvetica Neue', Helvetica, Arial, sans-serif;
   --display: var(--font-display), serif;
   --gutter: clamp(16px, 4vw, 48px);
 }
@@ -15,29 +17,69 @@
   box-sizing: border-box;
 }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  /* Pirata One solo tiene peso 400: sin esto, al heredar el 600 de la base el
+     navegador le dibuja una negrita falsa. */
+  font-synthesis-weight: none;
+}
+
 body {
   margin: 0;
-  background: var(--ink);
-  color: var(--bone);
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  line-height: 1.5;
+  background: #fff;
+  color: #000;
+  font-family: var(--sans);
+  /* El sitio de referencia usa Avenir Next Demi como peso base: en Figtree
+     equivale a 600. Los textos largos (descripciones) bajan a 400 donde toca. */
+  font-size: 10px;
+  font-weight: 600;
+  line-height: 1.15;
   -webkit-font-smoothing: antialiased;
 }
 
-img {
-  display: block;
-  max-width: 100%;
-  height: auto;
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+dl,
+dd,
+figure,
+blockquote {
+  margin: 0;
+  padding: 0;
 }
-
+h1,
+h2,
+h3,
+h4 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+ul,
+ol {
+  list-style: none;
+}
 a {
   color: inherit;
+  text-decoration: none;
 }
-
-h1,
-h2 {
-  font-family: var(--display);
-  font-weight: 400;
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+img {
+  height: auto;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
 }
 
 .solo-lectores {
@@ -52,44 +94,43 @@ h2 {
 .saltar {
   position: absolute;
   left: -9999px;
+  z-index: 5000;
 }
 .saltar:focus {
-  left: var(--gutter);
+  left: 16px;
   top: 8px;
-  z-index: 10;
-  background: var(--bone);
-  color: var(--ink);
+  background: var(--ink);
+  color: #fff;
   padding: 8px 12px;
+  font-size: 12px;
 }
 
-.cabecera {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  padding: 16px var(--gutter);
-}
-.cabecera__logo img {
-  width: 150px;
-}
-.cabecera__menu,
-.pie__redes,
-.migas ol {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
+:focus-visible {
+  outline: 2px solid var(--ice-dark);
+  outline-offset: 2px;
 }
 
+/* ===== Provisional: páginas aún no migradas al diseño final =====
+   Se borra cada bloque al migrar su página (MIGRACION.md, fase 1). */
 main {
-  padding: 0 var(--gutter) 64px;
+  padding: 140px var(--gutter) 64px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+main h1,
+main h2 {
+  font-family: var(--display);
+}
+main h1 {
+  font-size: clamp(38px, 4vw, 56px);
+}
+main h2 {
+  font-size: 32px;
 }
 
 .hero {
   position: relative;
-  margin: 0 calc(var(--gutter) * -1);
+  margin: -140px calc(var(--gutter) * -1) 0;
 }
 .hero__img {
   width: 100%;
@@ -105,24 +146,20 @@ main {
   position: absolute;
   left: var(--gutter);
   bottom: 24px;
-  margin: 0;
   font-family: var(--display);
   font-size: clamp(32px, 6vw, 72px);
 }
-
 .manifiesto {
   max-width: 60ch;
   margin: 48px auto;
   text-align: center;
 }
-
 .colecciones {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
   margin: 32px 0;
 }
-
 .grilla {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -138,11 +175,6 @@ main {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
-
-.tarjeta__enlace {
-  text-decoration: none;
-}
-/* Relación fija: la tarjeta reserva su espacio antes de que llegue la foto. */
 .tarjeta__foto img {
   width: 100%;
   aspect-ratio: 2 / 3;
@@ -150,25 +182,32 @@ main {
 }
 .tarjeta__nombre {
   margin: 8px 0 0;
-  font-size: 14px;
-  font-weight: 500;
+  font-family: var(--display);
+  font-size: 19px;
+  font-weight: 400;
+  text-align: center;
 }
 .tarjeta__precio,
 .ficha__precio {
   margin: 4px 0 0;
-  color: var(--steel);
+  color: #888;
+  text-align: center;
 }
-
 .migas {
   margin: 16px 0;
-  font-size: 13px;
-  color: var(--steel);
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: #888;
+}
+.migas ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 .migas li + li::before {
-  content: '/';
-  margin-right: 16px;
+  content: '>';
+  margin-right: 8px;
 }
-
 .ficha {
   display: grid;
   gap: 32px;
@@ -183,7 +222,7 @@ main {
   }
   .ficha__panel {
     position: sticky;
-    top: 24px;
+    top: 120px;
     align-self: start;
   }
 }
@@ -195,12 +234,20 @@ main {
 .ficha__galeria img {
   width: 100%;
   aspect-ratio: 2 / 3;
-  object-fit: cover;
+  object-fit: contain;
+  background-color: #f2f0ea;
 }
 .ficha__galeria img:first-child {
   grid-column: 1 / -1;
 }
-
+.ficha__coleccion {
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.ficha__color {
+  margin: 16px 0 0;
+}
 .pedido__tallas {
   display: flex;
   flex-wrap: wrap;
@@ -208,9 +255,6 @@ main {
   margin: 24px 0;
   padding: 0;
   border: 0;
-}
-.pedido__tallas legend {
-  margin-bottom: 8px;
 }
 .pedido__tallas input {
   position: absolute;
@@ -220,95 +264,57 @@ main {
   display: inline-block;
   min-width: 48px;
   padding: 10px 12px;
-  border: 1px solid var(--steel);
+  border: 1px solid #cfccc4;
   text-align: center;
   cursor: pointer;
 }
 .pedido__tallas input:checked + span {
-  background: var(--bone);
-  color: var(--ink);
-}
-.pedido__tallas input:focus-visible + span {
-  outline: 2px solid var(--ice);
-  outline-offset: 2px;
+  background: var(--ink);
+  color: #fff;
 }
 .pedido__tallas .agotada span {
   opacity: 0.4;
   text-decoration: line-through;
-  cursor: not-allowed;
 }
-
 .boton {
   display: inline-block;
-  padding: 14px 24px;
-  background: var(--bone);
-  color: var(--ink);
-  text-decoration: none;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-size: 13px;
+  padding: 18px 40px;
+  background: #000;
+  color: #fff;
+  font-size: 12px;
+  letter-spacing: 1.2px;
 }
 .boton[aria-disabled='true'] {
   opacity: 0.5;
 }
-
-.ficha__coleccion {
-  margin: 0;
-  font-size: 12px;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--steel);
-}
-.ficha__color {
-  margin: 16px 0 0;
-}
-
 .acordeones {
   margin-top: 32px;
 }
 .acordeon {
-  border-top: 1px solid #ffffff22;
   padding: 12px 0;
 }
 .acordeon summary {
   cursor: pointer;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
   font-size: 13px;
+  letter-spacing: 1.3px;
+  text-transform: uppercase;
 }
-
 .tabla-medidas {
   width: 100%;
   margin-top: 12px;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: 12px;
   text-align: center;
 }
 .tabla-medidas th,
 .tabla-medidas td {
   padding: 8px 4px;
-  border-bottom: 1px solid #ffffff1a;
-}
-.tabla-medidas thead th {
-  font-weight: 500;
-  color: var(--steel);
+  border-bottom: 1px solid #e3e0d8;
 }
 .tabla-medidas__nota {
-  font-size: 12px;
-  color: var(--steel);
+  font-size: 10px;
+  color: #888;
 }
-
-.pie {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 16px;
-  padding: 32px var(--gutter);
-  border-top: 1px solid #ffffff22;
-  font-size: 13px;
-  color: var(--steel);
-}
-
 .no-encontrado {
   padding: 96px 0;
   text-align: center;

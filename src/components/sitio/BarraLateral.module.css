@@ -1,0 +1,82 @@
+/* Columna fija a la derecha (solo escritorio): buscar, bolsa, favoritos y
+   cuenta. Cada elemento se ubica desde el centro vertical de la pantalla, con
+   los mismos desplazamientos que el sitio estático. */
+.lateral {
+  position: fixed;
+  top: 50%;
+  right: 31px;
+  z-index: 3003;
+  width: 0;
+  height: 0;
+  font-size: 12px;
+  line-height: 1.15;
+  color: #000;
+}
+.item {
+  position: absolute;
+  left: 0;
+  transform: translate(-50%, -50%);
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.buscar {
+  top: -139.5px;
+  margin-left: -0.5px;
+}
+/* La columna mide 0 de ancho: sin max-width: none el ícono se reduce a 0. */
+.buscar svg {
+  display: block;
+  width: 17px;
+  height: 17px;
+  max-width: none;
+}
+.bolsa {
+  top: -43px;
+}
+.favoritos {
+  top: 63px;
+}
+.cuenta {
+  top: 157.5px;
+  margin-left: -3px;
+}
+
+/* Texto girado 90° (se lee de arriba hacia abajo). */
+.vertical {
+  display: flex;
+  align-items: center;
+  transform: rotate(90deg);
+  white-space: nowrap;
+}
+/* Solo BOLSA lleva espaciado; FAVORITOS y CUENTA van sin él. */
+.bolsa .vertical {
+  letter-spacing: 1.2px;
+}
+.burbuja {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 28px;
+  height: 28px;
+  /* En el original el círculo desborda su caja ~4 px hacia el texto. */
+  margin-left: 1px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: #fff;
+  /* El número queda derecho aunque la fila esté girada. */
+  transform: rotate(-90deg);
+  transition: background-color 0.3s;
+}
+.bolsa:hover .burbuja {
+  background: var(--ice-dark);
+}
+
+@media (max-width: 812px) {
+  .lateral {
+    display: none;
+  }
+}

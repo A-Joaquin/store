@@ -2,6 +2,9 @@ import config from '@payload-config'
 import { getPayload } from 'payload'
 import { cache } from 'react'
 
+import { comoMedia } from './imagen'
+import type { PrendaMenu } from './navegacion'
+
 // overrideAccess: false aplica las reglas de acceso de un visitante: solo
 // productos publicados, nunca borradores.
 const publico = { overrideAccess: false } as const
@@ -44,6 +47,28 @@ export const getColecciones = cache(async () => {
     ...publico,
   })
   return docs
+})
+
+// Prendas mínimas para los recuadros destacados del mega menú y del menú móvil.
+export const getPrendasMenu = cache(async (): Promise<PrendaMenu[]> => {
+  const { docs } = await (await cliente()).find({
+    collection: 'productos',
+    depth: 1,
+    pagination: false,
+    select: { slug: true, nombre: true, precio: true, coleccion: true, tipo: true, galeria: true },
+    ...publico,
+  })
+  return docs.map((p) => {
+    const foto = comoMedia(p.galeria?.[0])
+    return {
+      slug: p.slug,
+      nombre: p.nombre,
+      precio: p.precio,
+      coleccion: typeof p.coleccion === 'object' ? (p.coleccion?.slug ?? null) : null,
+      tipo: typeof p.tipo === 'object' ? (p.tipo?.nombre ?? null) : null,
+      imagen: foto ? foto.sizes?.w800?.url || foto.sizes?.w400?.url || null : null,
+    }
+  })
 })
 
 export async function getProductos(opciones: { coleccion?: number; excluir?: number; limit?: number } = {}) {

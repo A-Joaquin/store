@@ -1,0 +1,183 @@
+.pie {
+  margin: 0 60px;
+  padding: 115px 0 50px;
+  font-size: 10px;
+  line-height: 1.15;
+}
+.fila {
+  display: flex;
+  justify-content: space-between;
+}
+.fila + .fila {
+  align-items: flex-end;
+  margin-top: 70px;
+}
+
+/* Newsletter */
+.news {
+  display: flex;
+}
+.newsTitulo {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.15;
+  letter-spacing: 1.3px;
+}
+.newsTitulo svg {
+  width: 17px;
+  height: 9px;
+  margin-top: 2px;
+}
+.newsCampo {
+  display: flex;
+  align-items: center;
+  width: 200px;
+  margin-left: 30px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #000;
+  align-self: flex-start;
+}
+.newsCampo input {
+  width: 180px;
+  padding: 0;
+  border: 0;
+  outline: none;
+  background: none;
+  font: inherit;
+  font-size: 13px;
+  line-height: 1.15;
+}
+.newsCampo input::placeholder {
+  color: #888;
+}
+.newsCampo button {
+  display: inline-flex;
+  width: 15px;
+  height: 10px;
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #000;
+  cursor: pointer;
+}
+.newsCampo button svg {
+  width: 15px;
+  height: 10px;
+}
+.newsGracias {
+  margin-left: 30px;
+  font-size: 12px;
+  letter-spacing: 1.2px;
+  color: var(--ice-dark);
+}
+
+/* Menús */
+.menus {
+  display: flex;
+}
+.info li {
+  font-size: 12px;
+  line-height: 1.15;
+  letter-spacing: 1.2px;
+}
+.info li + li {
+  margin-top: 7px;
+}
+.legal {
+  margin: 20px 20px 0 105px;
+}
+.legal li {
+  letter-spacing: 1px;
+}
+.legal li + li {
+  margin-top: 7px;
+}
+.redes {
+  margin: 0 20px 0 105px;
+}
+.redes li {
+  letter-spacing: 1px;
+}
+.redes li + li {
+  margin-top: 15px;
+}
+.redes a {
+  display: flex;
+  align-items: center;
+  line-height: 13px;
+}
+.redes svg {
+  width: 13px;
+  height: 13px;
+  margin-right: 12px;
+}
+
+.logo img {
+  display: block;
+  width: 160px;
+  height: auto;
+}
+.copy {
+  letter-spacing: 0.5px;
+}
+
+@media (max-width: 812px) {
+  .pie {
+    margin: 0 10px;
+    padding: 76px 15px 40px;
+  }
+  .fila {
+    display: block;
+  }
+  .news {
+    display: block;
+  }
+  .newsCampo {
+    width: 250px;
+    margin: 20px 0 0;
+  }
+  .newsCampo input {
+    width: 225px;
+  }
+  .menus {
+    display: block;
+    margin-top: 55px;
+  }
+  .info li + li {
+    margin-top: 12px;
+  }
+  .legal {
+    margin: 30px 0 0;
+  }
+  .legal li {
+    font-size: 12px;
+    line-height: 1.15;
+    letter-spacing: 1.2px;
+  }
+  .legal li + li {
+    margin-top: 8px;
+  }
+  .redes {
+    display: flex;
+    align-items: center;
+    margin: 35px 0 0;
+  }
+  .redes li + li {
+    margin: 0 0 0 20px;
+  }
+  /* En móvil solo el ícono, a 16 px. */
+  .redes a span {
+    display: none;
+  }
+  .redes svg {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+  }
+  .logo {
+    display: none;
+  }
+}
