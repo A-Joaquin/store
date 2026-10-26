@@ -85,7 +85,7 @@
   height: 26px;
   border: none;
   background: transparent;
-  cursor: pointer;
+  cursor: var(--cursor-enlace);
   font-size: 15px;
   line-height: 1;
 }
@@ -106,7 +106,7 @@
   padding: 0;
   border: none;
   background: transparent;
-  cursor: pointer;
+  cursor: var(--cursor-enlace);
   font-size: 18px;
   line-height: 1;
   color: var(--steel);

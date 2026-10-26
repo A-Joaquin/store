@@ -23,7 +23,7 @@
   background: none;
   color: inherit;
   font: inherit;
-  cursor: pointer;
+  cursor: var(--cursor-enlace);
 }
 .buscar {
   top: -139.5px;

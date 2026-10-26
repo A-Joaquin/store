@@ -117,7 +117,7 @@
     right center / 9px no-repeat;
   color: var(--ink);
   font: inherit;
-  cursor: pointer;
+  cursor: var(--cursor-enlace);
 }
 
 /* Botón negro; al pasar el mouse el texto se corre y aparece una flecha. */
@@ -132,7 +132,7 @@
   font-size: 12px;
   line-height: 1.15;
   letter-spacing: 1.2px;
-  cursor: pointer;
+  cursor: var(--cursor-enlace);
 }
 .agregar span {
   position: relative;
@@ -196,7 +196,7 @@
   font-size: 12px;
   line-height: 1.2;
   letter-spacing: 1.2px;
-  cursor: pointer;
+  cursor: var(--cursor-enlace);
 }
 .accesoBolsa {
   margin-top: 20px;
@@ -240,7 +240,7 @@
 .acordeon summary {
   position: relative;
   list-style: none;
-  cursor: pointer;
+  cursor: var(--cursor-enlace);
   user-select: none;
 }
 .acordeon summary::-webkit-details-marker {

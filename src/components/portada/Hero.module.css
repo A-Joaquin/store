@@ -9,7 +9,7 @@
 .fotos {
   position: absolute;
   inset: 0;
-  cursor: pointer;
+  cursor: var(--cursor-enlace);
   /* Se puede arrastrar para cambiar de foto: sin selección ni arrastre de la
      imagen del navegador, y en el celular el gesto vertical sigue desplazando
      la página. */
@@ -127,7 +127,7 @@
   border: 0;
   background: none;
   color: #000;
-  cursor: pointer;
+  cursor: var(--cursor-enlace);
 }
 .anterior {
   left: 118px;
@@ -214,7 +214,7 @@
   color: #fff;
   font-size: 12px;
   line-height: 1.15;
-  cursor: pointer;
+  cursor: var(--cursor-enlace);
 }
 .newsGracias {
   font-size: 12px;

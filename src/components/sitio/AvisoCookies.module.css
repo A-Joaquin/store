@@ -49,7 +49,7 @@
   padding: 0;
   border: 0;
   background: none;
-  cursor: pointer;
+  cursor: var(--cursor-enlace);
 }
 .cerrar::before,
 .cerrar::after {

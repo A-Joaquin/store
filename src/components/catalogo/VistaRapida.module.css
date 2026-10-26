@@ -67,7 +67,7 @@
   padding: 0;
   border: 0;
   background: none;
-  cursor: pointer;
+  cursor: var(--cursor-enlace);
 }
 .cerrar::before,
 .cerrar::after {
@@ -115,7 +115,7 @@
   overflow: hidden;
   border: 1px solid #ddd9d1;
   background: #f2f0ea;
-  cursor: pointer;
+  cursor: var(--cursor-enlace);
   opacity: 0.7;
   transition:
     border-color 0.2s,
@@ -195,7 +195,7 @@
   background: transparent;
   font-size: 12px;
   letter-spacing: 0.08em;
-  cursor: pointer;
+  cursor: var(--cursor-enlace);
   transition:
     background 0.2s,
     color 0.2s,
@@ -225,7 +225,7 @@
   font-size: 12px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  cursor: pointer;
+  cursor: var(--cursor-enlace);
   transition: background 0.25s;
 }
 .agregar:hover {

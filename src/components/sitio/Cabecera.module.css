@@ -99,7 +99,7 @@
   border: 0;
   background: none;
   color: inherit;
-  cursor: pointer;
+  cursor: var(--cursor-enlace);
 }
 .icono {
   position: relative;
@@ -453,7 +453,7 @@
     font-size: 12px;
     line-height: 1;
     letter-spacing: 1.2px;
-    cursor: pointer;
+    cursor: var(--cursor-enlace);
   }
   /* En el original el círculo desborda su caja ~3 px hacia el texto. */
   .bolsaMovil .burbuja {

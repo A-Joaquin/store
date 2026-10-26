@@ -61,7 +61,7 @@
   border: 0;
   background: none;
   color: #000;
-  cursor: pointer;
+  cursor: var(--cursor-enlace);
 }
 .newsCampo button svg {
   width: 15px;

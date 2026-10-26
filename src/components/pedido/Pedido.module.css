@@ -90,7 +90,7 @@
   display: block;
   padding: 16px 18px;
   border: 1px solid #d7d4cc;
-  cursor: pointer;
+  cursor: var(--cursor-enlace);
   transition: border-color 0.2s;
 }
 .opcion input {
@@ -146,7 +146,7 @@
   font-size: 12px;
   letter-spacing: 0.2em;
   text-align: center;
-  cursor: pointer;
+  cursor: var(--cursor-enlace);
   transition:
     background 0.3s,
     color 0.3s;

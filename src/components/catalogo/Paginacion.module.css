@@ -30,7 +30,7 @@
   background: none;
   font: inherit;
   letter-spacing: inherit;
-  cursor: pointer;
+  cursor: var(--cursor-enlace);
 }
 .actual {
   padding-bottom: 3px;
