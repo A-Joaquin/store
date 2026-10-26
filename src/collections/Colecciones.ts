@@ -2,14 +2,13 @@ import type { CollectionConfig } from 'payload'
 
 import { slugField } from '@/fields/slug'
 import { revalidarTodo } from '@/lib/revalidar'
+import { lecturaPublica } from '@/lib/acceso'
 
 export const Colecciones: CollectionConfig = {
   slug: 'colecciones',
   typescript: { interface: 'Coleccion' },
   labels: { singular: 'Colección', plural: 'Colecciones' },
-  access: {
-    read: () => true,
-  },
+  access: lecturaPublica,
   admin: {
     useAsTitle: 'nombre',
     defaultColumns: ['nombre', 'slug', 'orden'],

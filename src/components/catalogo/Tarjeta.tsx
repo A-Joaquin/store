@@ -7,6 +7,8 @@ import { precioBs } from '@/lib/formato'
 import { rutaProducto } from '@/lib/sitio'
 import type { PrendaTarjeta } from '@/lib/tarjeta'
 
+import { BotonFavorito } from '@/components/favoritos/BotonFavorito'
+
 import s from './Tarjeta.module.css'
 import { useVistaRapida } from './VistaRapida'
 
@@ -80,6 +82,7 @@ export function Tarjeta({ prenda, sizes = '(max-width: 812px) 50vw, 20vw', prior
             <button type="button" className={`${s.nav} ${s.siguiente}`} onClick={() => ir(indice + 1)} aria-label="Foto siguiente" />
           </>
         )}
+        <BotonFavorito slug={prenda.slug} nombre={prenda.nombre} />
         <button type="button" className={s.rapida} onClick={() => vistaRapida.abrir(prenda)} aria-label={`Vista rápida: ${prenda.nombre}`}>
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M1.5 12S5.5 5 12 5s10.5 7 10.5 7-4 7-10.5 7S1.5 12 1.5 12z" />

@@ -5,6 +5,7 @@ import React from 'react'
 import { CajonCarrito } from '@/components/carrito/CajonCarrito'
 import { CarritoProvider } from '@/components/carrito/Carrito'
 import { VistaRapidaProvider } from '@/components/catalogo/VistaRapida'
+import { FavoritosProvider } from '@/components/favoritos/Favoritos'
 import { JsonLd } from '@/components/JsonLd'
 import { AvisoCookies } from '@/components/sitio/AvisoCookies'
 import { BarraLateral } from '@/components/sitio/BarraLateral'
@@ -21,9 +22,15 @@ import './globals.css'
 // Figtree reemplaza a Avenir Next (fuente comercial del tema de referencia):
 // es la alternativa libre más parecida en forma y ancho (±1,6 %).
 const sans = Figtree({ subsets: ['latin'], display: 'swap', variable: '--font-sans' })
-const display = Pirata_One({ weight: '400', subsets: ['latin'], display: 'swap', variable: '--font-display' })
+const display = Pirata_One({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-display',
+})
 
-const DESCRIPCION_BASE = 'Streetwear boliviano: poleras, manga larga y conjuntos Track de edición limitada.'
+const DESCRIPCION_BASE =
+  'Streetwear boliviano: poleras, manga larga y conjuntos Track de edición limitada.'
 
 export async function generateMetadata(): Promise<Metadata> {
   const ajustes = await getAjustes()
@@ -70,28 +77,44 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   )
   const listaColecciones = colecciones.map((c) => ({ nombre: c.nombre, slug: c.slug }))
   // Mismo recuadro inicial que el sitio estático: la chaqueta Track Reliquia.
-  const destacada = prendas.find((p) => p.slug === 'chaqueta-track-reliquia') ?? prendas.find((p) => p.imagen) ?? null
+  const destacada =
+    prendas.find((p) => p.slug === 'chaqueta-track-reliquia') ??
+    prendas.find((p) => p.imagen) ??
+    null
 
   return (
     <html lang="es-BO" className={`${sans.variable} ${display.variable}`}>
       <body>
         <CarritoProvider>
           <MenuMovilProvider>
-            <VistaRapidaProvider>
-              <a href="#contenido" className="saltar">
-                Ir al contenido
-              </a>
-              <Cabecera colecciones={listaColecciones} categorias={categorias} prendas={prendas} destacada={destacada} redes={redes} />
-              <BarraLateral />
-              <MenuMovil colecciones={listaColecciones} categorias={categorias} prendas={prendas} redes={redes} />
-              <CajonCarrito />
+            <FavoritosProvider>
+              <VistaRapidaProvider>
+                <a href="#contenido" className="saltar">
+                  Ir al contenido
+                </a>
+                <Cabecera
+                  colecciones={listaColecciones}
+                  categorias={categorias}
+                  prendas={prendas}
+                  destacada={destacada}
+                  redes={redes}
+                />
+                <BarraLateral />
+                <MenuMovil
+                  colecciones={listaColecciones}
+                  categorias={categorias}
+                  prendas={prendas}
+                  redes={redes}
+                />
+                <CajonCarrito />
 
-              <main id="contenido">{children}</main>
+                <main id="contenido">{children}</main>
 
-              <Pie redes={redes} />
-              <AvisoCookies />
-              <ContrasteAuto />
-            </VistaRapidaProvider>
+                <Pie redes={redes} />
+                <AvisoCookies />
+                <ContrasteAuto />
+              </VistaRapidaProvider>
+            </FavoritosProvider>
           </MenuMovilProvider>
         </CarritoProvider>
 

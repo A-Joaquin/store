@@ -63,6 +63,7 @@ export type SupportedTimezones =
 
 export interface Config {
   auth: {
+    clientes: ClienteAuthOperations;
     users: UserAuthOperations;
   };
   blocks: {};
@@ -72,6 +73,7 @@ export interface Config {
     tipos: Tipo;
     inventario: ItemInventario;
     pedidos: Pedido;
+    clientes: Cliente;
     media: Media;
     users: User;
     'payload-kv': PayloadKv;
@@ -86,6 +88,7 @@ export interface Config {
     tipos: TiposSelect<false> | TiposSelect<true>;
     inventario: InventarioSelect<false> | InventarioSelect<true>;
     pedidos: PedidosSelect<false> | PedidosSelect<true>;
+    clientes: ClientesSelect<false> | ClientesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -109,10 +112,28 @@ export interface Config {
   widgets: {
     collections: CollectionsWidget;
   };
-  user: User;
+  user: Cliente | User;
   jobs: {
     tasks: unknown;
     workflows: unknown;
+  };
+}
+export interface ClienteAuthOperations {
+  forgotPassword: {
+    email: string;
+    password: string;
+  };
+  login: {
+    email: string;
+    password: string;
+  };
+  registerFirstUser: {
+    email: string;
+    password: string;
+  };
+  unlock: {
+    email: string;
+    password: string;
   };
 }
 export interface UserAuthOperations {
@@ -437,6 +458,10 @@ export interface Pedido {
       }[]
     | null;
   /**
+   * Si el pedido se hizo con sesión iniciada.
+   */
+  cliente?: (number | null) | Cliente;
+  /**
    * Si sigue pendiente después de esta hora, se cancela y el stock vuelve.
    */
   reservaHasta?: string | null;
@@ -445,6 +470,35 @@ export interface Pedido {
   simulado?: boolean | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "clientes".
+ */
+export interface Cliente {
+  id: number;
+  nombre: string;
+  telefono?: string | null;
+  favoritos?: (number | Producto)[] | null;
+  updatedAt: string;
+  createdAt: string;
+  email: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpiration?: string | null;
+  salt?: string | null;
+  hash?: string | null;
+  resetPasswordRequestedAt?: string | null;
+  loginAttempts?: number | null;
+  lockUntil?: string | null;
+  sessions?:
+    | {
+        id: string;
+        createdAt?: string | null;
+        expiresAt: string;
+      }[]
+    | null;
+  password?: string | null;
+  collection: 'clientes';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -518,6 +572,10 @@ export interface PayloadLockedDocument {
         value: number | Pedido;
       } | null)
     | ({
+        relationTo: 'clientes';
+        value: number | Cliente;
+      } | null)
+    | ({
         relationTo: 'media';
         value: number | Media;
       } | null)
@@ -526,10 +584,15 @@ export interface PayloadLockedDocument {
         value: number | User;
       } | null);
   globalSlug?: string | null;
-  user: {
-    relationTo: 'users';
-    value: number | User;
-  };
+  user:
+    | {
+        relationTo: 'clientes';
+        value: number | Cliente;
+      }
+    | {
+        relationTo: 'users';
+        value: number | User;
+      };
   updatedAt: string;
   createdAt: string;
 }
@@ -539,10 +602,15 @@ export interface PayloadLockedDocument {
  */
 export interface PayloadPreference {
   id: number;
-  user: {
-    relationTo: 'users';
-    value: number | User;
-  };
+  user:
+    | {
+        relationTo: 'clientes';
+        value: number | Cliente;
+      }
+    | {
+        relationTo: 'users';
+        value: number | User;
+      };
   key?: string | null;
   value?:
     | {
@@ -718,12 +786,39 @@ export interface PedidosSelect<T extends boolean = true> {
         nota?: T;
         id?: T;
       };
+  cliente?: T;
   reservaHasta?: T;
   stockReservado?: T;
   seguimiento?: T;
   simulado?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "clientes_select".
+ */
+export interface ClientesSelect<T extends boolean = true> {
+  nombre?: T;
+  telefono?: T;
+  favoritos?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  email?: T;
+  resetPasswordToken?: T;
+  resetPasswordExpiration?: T;
+  salt?: T;
+  hash?: T;
+  resetPasswordRequestedAt?: T;
+  loginAttempts?: T;
+  lockUntil?: T;
+  sessions?:
+    | T
+    | {
+        id?: T;
+        createdAt?: T;
+        expiresAt?: T;
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

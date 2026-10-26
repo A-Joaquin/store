@@ -2,6 +2,7 @@ import type { CollectionConfig } from 'payload'
 
 import { slugField } from '@/fields/slug'
 import { revalidarTodo } from '@/lib/revalidar'
+import { esEquipo, soloEquipo } from '@/lib/acceso'
 
 export const TALLAS = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'Única'] as const
 
@@ -10,7 +11,10 @@ export const Productos: CollectionConfig = {
   labels: { singular: 'Producto', plural: 'Productos' },
   access: {
     // Sin sesión solo se ven los publicados; los borradores quedan en el panel.
-    read: ({ req: { user } }) => (user ? true : { _status: { equals: 'published' } }),
+    read: ({ req }) => (esEquipo(req) ? true : { _status: { equals: 'published' } }),
+    create: soloEquipo,
+    update: soloEquipo,
+    delete: soloEquipo,
   },
   admin: {
     useAsTitle: 'nombre',

@@ -8,6 +8,7 @@ import { buildConfig } from 'payload'
 import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
+import { Clientes } from './collections/Clientes'
 import { Colecciones } from './collections/Colecciones'
 import { Inventario } from './collections/Inventario'
 import { Media } from './collections/Media'
@@ -49,7 +50,7 @@ export default buildConfig({
     supportedLanguages: { es },
     fallbackLanguage: 'es',
   },
-  collections: [Productos, Colecciones, Tipos, Inventario, Pedidos, Media, Users],
+  collections: [Productos, Colecciones, Tipos, Inventario, Pedidos, Clientes, Media, Users],
   globals: [Portada, Ajustes],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

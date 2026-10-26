@@ -3,14 +3,13 @@ import type { GlobalConfig } from 'payload'
 import { CIUDADES } from '@/lib/pedidos/estados'
 import { revalidarTodo } from '@/lib/revalidar'
 import { CUIDADO, ORIGEN } from '@/lib/textos'
+import { publico, soloEquipo } from '@/lib/acceso'
 
 export const Ajustes: GlobalConfig = {
   slug: 'ajustes',
   typescript: { interface: 'Ajustes' },
   label: 'Ajustes de la tienda',
-  access: {
-    read: () => true,
-  },
+  access: { read: publico, update: soloEquipo },
   admin: {
     group: 'Sitio',
   },

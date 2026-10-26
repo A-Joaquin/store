@@ -73,7 +73,7 @@ export async function expirarReservas(payload: Payload) {
 export async function crearPedido(
   payload: Payload,
   entrada: EntradaPedido,
-  opciones: { simulado?: boolean } = {},
+  opciones: { simulado?: boolean; clienteId?: number } = {},
 ): Promise<ResultadoPedido> {
   await expirarReservas(payload)
 
@@ -177,6 +177,7 @@ export async function crearPedido(
         stockReservado: true,
         seguimiento: randomBytes(12).toString('base64url'),
         simulado: Boolean(opciones.simulado),
+        cliente: opciones.clienteId,
         historial: [{ estado: 'pendiente', fecha: ahora.toISOString(), nota: 'Pedido desde la web' }],
       },
     })

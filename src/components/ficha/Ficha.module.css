@@ -398,3 +398,14 @@
     margin: 15px 5px;
   }
 }
+
+/* "Agregar a favoritos": misma fila que "Ver mi bolsa" y "Guía de tallas". */
+.favorito {
+  margin-top: 6px;
+}
+@media (max-width: 812px) {
+  .favorito {
+    display: flex;
+    margin: 6px auto 0;
+  }
+}

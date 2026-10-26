@@ -141,12 +141,12 @@ export function MenuMovil({ colecciones, categorias, prendas, redes }: Props) {
         >
           BOLSA ({carrito.cantidad})
         </button>
-        <a href="#" tabIndex={tab}>
+        <Link href="/favoritos" tabIndex={tab}>
           FAVORITOS
-        </a>
-        <a href="#" tabIndex={tab}>
+        </Link>
+        <Link href="/cuenta" tabIndex={tab}>
           CUENTA
-        </a>
+        </Link>
       </div>
 
       <div className={s.pie} style={{ '--i': 10 } as React.CSSProperties}>

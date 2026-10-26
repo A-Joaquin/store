@@ -1,13 +1,12 @@
 import type { GlobalConfig } from 'payload'
 
 import { revalidar } from '@/lib/revalidar'
+import { publico, soloEquipo } from '@/lib/acceso'
 
 export const Portada: GlobalConfig = {
   slug: 'portada',
   label: 'Portada',
-  access: {
-    read: () => true,
-  },
+  access: { read: publico, update: soloEquipo },
   admin: {
     group: 'Sitio',
   },

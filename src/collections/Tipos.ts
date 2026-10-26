@@ -5,6 +5,7 @@ import { revalidarTodo } from '@/lib/revalidar'
 import { NOTA_MEDIDAS } from '@/lib/textos'
 
 import { TALLAS } from './Productos'
+import { lecturaPublica } from '@/lib/acceso'
 
 // Hasta 4 columnas en la tabla de medidas (hoy se usan 3 en todos los tipos).
 export const COLUMNAS = ['c1', 'c2', 'c3', 'c4'] as const
@@ -13,9 +14,7 @@ export const Tipos: CollectionConfig = {
   slug: 'tipos',
   typescript: { interface: 'Tipo' },
   labels: { singular: 'Tipo de prenda', plural: 'Tipos de prenda' },
-  access: {
-    read: () => true,
-  },
+  access: lecturaPublica,
   admin: {
     useAsTitle: 'nombre',
     defaultColumns: ['nombre', 'categoria', 'updatedAt'],

@@ -1,5 +1,7 @@
 'use client'
 
+import Link from 'next/link'
+
 import { useCarrito } from '@/components/carrito/Carrito'
 import { useMagnetico } from '@/lib/useMagnetico'
 
@@ -35,16 +37,16 @@ export function BarraLateral() {
           </span>
         </span>
       </button>
-      <a href="#" className={`${s.item} ${s.favoritos}`} {...zonaFavoritos}>
+      <Link href="/favoritos" className={`${s.item} ${s.favoritos}`} {...zonaFavoritos}>
         <span ref={refFavoritos} className={s.iman} data-contraste>
           <span className={`${s.vertical} ${c.tachado}`}>FAVORITOS</span>
         </span>
-      </a>
-      <a href="#" className={`${s.item} ${s.cuenta}`} {...zonaCuenta}>
+      </Link>
+      <Link href="/cuenta" className={`${s.item} ${s.cuenta}`} {...zonaCuenta}>
         <span ref={refCuenta} className={s.iman} data-contraste>
           <span className={`${s.vertical} ${c.tachado}`}>CUENTA</span>
         </span>
-      </a>
+      </Link>
     </div>
   )
 }

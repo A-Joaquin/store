@@ -3,6 +3,7 @@
 import { useState } from 'react'
 
 import { useCarrito } from '@/components/carrito/Carrito'
+import { BotonFavorito } from '@/components/favoritos/BotonFavorito'
 import { BolsaIcono, Regla } from '@/components/sitio/Iconos'
 
 import s from './Ficha.module.css'
@@ -86,6 +87,7 @@ export function CompraFicha({ slug, nombre, precio, imagen, color, tallas }: Pro
         <Regla />
         <span>Guía de tallas</span>
       </button>
+      <BotonFavorito slug={slug} nombre={nombre} variante="texto" className={s.favorito} />
     </>
   )
 }

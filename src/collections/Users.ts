@@ -1,4 +1,5 @@
 import type { CollectionConfig } from 'payload'
+import { soloEquipo } from '@/lib/acceso'
 
 export const Users: CollectionConfig = {
   slug: 'users',
@@ -7,6 +8,8 @@ export const Users: CollectionConfig = {
     useAsTitle: 'email',
     group: 'Administración',
   },
+  // Solo el equipo ve y administra a los usuarios del panel.
+  access: { read: soloEquipo, create: soloEquipo, update: soloEquipo, delete: soloEquipo },
   auth: {
     // Bloquea la cuenta 10 minutos tras 5 intentos fallidos.
     maxLoginAttempts: 5,

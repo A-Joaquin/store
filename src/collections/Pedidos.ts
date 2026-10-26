@@ -3,6 +3,7 @@ import { APIError, type Where } from 'payload'
 
 import { liberar } from '@/lib/pedidos/stock'
 import { CIUDADES, ESTADOS, METODOS, type EstadoPedido } from '@/lib/pedidos/estados'
+import { esEquipo, soloEquipo } from '@/lib/acceso'
 
 const SOLO_BORRABLES: Where = { or: [{ estado: { equals: 'cancelado' } }, { simulado: { equals: true } }] }
 
@@ -15,11 +16,11 @@ export const Pedidos: CollectionConfig = {
   labels: { singular: 'Pedido', plural: 'Pedidos' },
   access: {
     // Solo el equipo. La web crea pedidos desde el servidor (lib/pedidos/crear.ts).
-    read: ({ req: { user } }) => Boolean(user),
-    create: ({ req: { user } }) => Boolean(user),
-    update: ({ req: { user } }) => Boolean(user),
+    read: soloEquipo,
+    create: soloEquipo,
+    update: soloEquipo,
     // Solo cancelados o de prueba: borrar una venta devolvería su stock.
-    delete: ({ req: { user } }) => (user ? SOLO_BORRABLES : false),
+    delete: ({ req }) => (esEquipo(req) ? SOLO_BORRABLES : false),
   },
   admin: {
     useAsTitle: 'numero',
@@ -164,6 +165,12 @@ export const Pedidos: CollectionConfig = {
         position: 'sidebar',
         components: { Field: '@/components/admin/EnlaceSeguimiento#EnlaceSeguimiento' },
       },
+    },
+    {
+      name: 'cliente',
+      type: 'relationship',
+      relationTo: 'clientes',
+      admin: { position: 'sidebar', readOnly: true, description: 'Si el pedido se hizo con sesión iniciada.' },
     },
     {
       name: 'reservaHasta',

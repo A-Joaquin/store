@@ -2,6 +2,7 @@ import type { CollectionConfig, ImageSize } from 'payload'
 import sharp from 'sharp'
 
 import { ANCHOS } from '@/lib/imagen'
+import { lecturaPublica } from '@/lib/acceso'
 
 // Cada tamaño necesita su propio formatOptions: sin él Payload conserva el
 // formato original y un PNG de 2 MB seguiría saliendo PNG.
@@ -17,9 +18,7 @@ const ancho = (name: string, width: number): ImageSize => ({
 export const Media: CollectionConfig = {
   slug: 'media',
   labels: { singular: 'Imagen', plural: 'Imágenes' },
-  access: {
-    read: () => true,
-  },
+  access: lecturaPublica,
   admin: {
     group: 'Catálogo',
   },

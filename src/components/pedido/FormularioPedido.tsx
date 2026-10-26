@@ -12,6 +12,8 @@ import { CIUDADES, HORAS_RESERVA, type MetodoEntrega } from '@/lib/pedidos/estad
 import s from './Pedido.module.css'
 
 type Props = {
+  // Con sesión iniciada: datos precargados.
+  cliente: { nombre: string; telefono: string; email: string } | null
   envios: {
     domicilio: number
     encomienda: number
@@ -21,7 +23,7 @@ type Props = {
   }
 }
 
-export function FormularioPedido({ envios }: Props) {
+export function FormularioPedido({ cliente, envios }: Props) {
   const router = useRouter()
   const carrito = useCarrito()
   const [metodo, setMetodo] = useState<MetodoEntrega>('domicilio')
@@ -91,15 +93,15 @@ export function FormularioPedido({ envios }: Props) {
           <div className={s.fila}>
             <label className={s.campo}>
               NOMBRE Y APELLIDO
-              <input name="nombre" required minLength={2} maxLength={80} autoComplete="name" />
+              <input name="nombre" defaultValue={cliente?.nombre} required minLength={2} maxLength={80} autoComplete="name" />
             </label>
             <label className={s.campo}>
               WHATSAPP
-              <input name="telefono" required type="tel" inputMode="tel" placeholder="+591 7…" autoComplete="tel" />
+              <input name="telefono" defaultValue={cliente?.telefono} required type="tel" inputMode="tel" placeholder="+591 7…" autoComplete="tel" />
             </label>
             <label className={`${s.campo} ${s.campoAncho}`}>
               CORREO (OPCIONAL)
-              <input name="email" type="email" autoComplete="email" />
+              <input name="email" defaultValue={cliente?.email} type="email" autoComplete="email" />
             </label>
             <label className={s.campo}>
               CI / NIT PARA LA FACTURA (OPCIONAL)

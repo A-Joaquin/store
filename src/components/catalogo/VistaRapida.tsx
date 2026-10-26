@@ -9,6 +9,8 @@ import { precioBs } from '@/lib/formato'
 import { rutaProducto } from '@/lib/sitio'
 import type { PrendaTarjeta } from '@/lib/tarjeta'
 
+import { BotonFavorito } from '@/components/favoritos/BotonFavorito'
+
 import s from './VistaRapida.module.css'
 
 type Estado = { abrir: (p: PrendaTarjeta) => void }
@@ -144,6 +146,9 @@ function Modal({ prenda, cerrar }: { prenda: PrendaTarjeta; cerrar: () => void }
             <Link className={s.ficha} href={rutaProducto(prenda.slug)}>
               VER FICHA COMPLETA
             </Link>
+            <div className={s.favorito}>
+              <BotonFavorito slug={prenda.slug} nombre={prenda.nombre} variante="texto" />
+            </div>
           </div>
         </div>
       </div>

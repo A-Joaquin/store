@@ -1,5 +1,6 @@
 'use server'
 
+import { getCliente } from '@/lib/clientes'
 import { cliente } from '@/lib/datos'
 import { crearPedido, type EntradaPedido } from '@/lib/pedidos/crear'
 
@@ -11,7 +12,9 @@ export async function realizarPedido(entrada: EntradaPedido & { web?: string }):
   // Campo trampa: invisible para personas; si viene lleno es un bot.
   if (entrada.web) return { ok: false, error: 'No se pudo enviar el pedido.' }
   try {
-    const r = await crearPedido(await cliente(), entrada)
+    // Con sesión iniciada, el pedido queda en "Mis pedidos" del cliente.
+    const c = await getCliente()
+    const r = await crearPedido(await cliente(), entrada, { clienteId: c?.id })
     if (!r.ok) return { ok: false, error: r.error }
     return { ok: true, seguimiento: r.pedido.seguimiento! }
   } catch (e) {

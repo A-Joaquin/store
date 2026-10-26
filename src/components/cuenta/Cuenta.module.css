@@ -1,0 +1,126 @@
+/* /cuenta: mismos campos y botones que el formulario de pedido. */
+.acceso {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 100px;
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 150px 60px 110px;
+}
+.columna + .columna {
+  padding-left: 100px;
+  border-left: 1px solid #e3e0d8;
+  margin-left: -100px;
+}
+.campos {
+  display: grid;
+  gap: 22px;
+  margin-top: 36px;
+}
+.ayuda {
+  margin-top: 18px;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--steel);
+}
+
+.cuenta {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 150px 60px 110px;
+}
+.saludo {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 20px;
+}
+.salir {
+  padding: 0 0 3px;
+  border: 0;
+  border-bottom: 1px solid currentColor;
+  background: none;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  cursor: var(--cursor-enlace);
+}
+.seccion {
+  margin-top: 56px;
+}
+.subtitulo {
+  margin-bottom: 16px;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: #888;
+}
+.seccion a {
+  border-bottom: 1px solid transparent;
+}
+.seccion p a {
+  border-bottom-color: currentColor;
+}
+
+.pedidos li {
+  border-top: 1px solid #e3e0d8;
+}
+.pedidos li:last-child {
+  border-bottom: 1px solid #e3e0d8;
+}
+.pedidos a {
+  display: grid;
+  grid-template-columns: 110px 1fr 1fr 110px 60px;
+  gap: 12px;
+  align-items: center;
+  padding: 16px 4px;
+  font-size: 13px;
+  font-weight: 400;
+  transition: background 0.2s;
+}
+.pedidos a:hover {
+  background: #f7f5f0;
+}
+.numero {
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+.total {
+  text-align: right;
+}
+.ver {
+  font-size: 11px;
+  letter-spacing: 0.15em;
+  text-align: right;
+  color: #888;
+}
+.cancelado {
+  color: #8c1d18;
+}
+.ok {
+  margin-top: 20px;
+  font-size: 13px;
+  color: var(--ice-dark);
+}
+
+@media (max-width: 812px) {
+  .acceso {
+    grid-template-columns: 1fr;
+    gap: 60px;
+    padding: 110px 20px 70px;
+  }
+  .columna + .columna {
+    margin-left: 0;
+    padding: 50px 0 0;
+    border-left: 0;
+    border-top: 1px solid #e3e0d8;
+  }
+  .cuenta {
+    padding: 110px 20px 70px;
+  }
+  .pedidos a {
+    grid-template-columns: 1fr auto;
+  }
+  .pedidos a span:nth-child(2),
+  .pedidos a span:nth-child(5) {
+    display: none;
+  }
+}

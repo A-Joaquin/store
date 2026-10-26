@@ -3,6 +3,7 @@ import type { CollectionConfig } from 'payload'
 import { revalidarTodo } from '@/lib/revalidar'
 
 import { TALLAS } from './Productos'
+import { lecturaPublica } from '@/lib/acceso'
 
 export const STOCK_BAJO = 2
 
@@ -14,9 +15,7 @@ export const Inventario: CollectionConfig = {
   slug: 'inventario',
   typescript: { interface: 'ItemInventario' },
   labels: { singular: 'Stock', plural: 'Inventario' },
-  access: {
-    read: () => true,
-  },
+  access: lecturaPublica,
   admin: {
     useAsTitle: 'etiqueta',
     defaultColumns: ['etiqueta', 'stock', 'updatedAt'],
