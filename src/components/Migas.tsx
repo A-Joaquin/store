@@ -6,7 +6,26 @@ import { JsonLd } from './JsonLd'
 
 export type Miga = { nombre: string; ruta: string }
 
-// Migas visibles + BreadcrumbList para Google.
+// BreadcrumbList para Google (Inicio › … › página actual).
+export function MigasDatos({ items }: { items: Miga[] }) {
+  const todas = [{ nombre: 'Inicio', ruta: '/' }, ...items]
+  return (
+    <JsonLd
+      datos={{
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: todas.map((m, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name: m.nombre,
+          item: SITE_URL + m.ruta,
+        })),
+      }}
+    />
+  )
+}
+
+// Migas visibles + BreadcrumbList.
 export function Migas({ items }: { items: Miga[] }) {
   const todas = [{ nombre: 'Inicio', ruta: '/' }, ...items]
   return (
@@ -20,18 +39,7 @@ export function Migas({ items }: { items: Miga[] }) {
           ))}
         </ol>
       </nav>
-      <JsonLd
-        datos={{
-          '@context': 'https://schema.org',
-          '@type': 'BreadcrumbList',
-          itemListElement: todas.map((m, i) => ({
-            '@type': 'ListItem',
-            position: i + 1,
-            name: m.nombre,
-            item: SITE_URL + m.ruta,
-          })),
-        }}
-      />
+      <MigasDatos items={items} />
     </>
   )
 }

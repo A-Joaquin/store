@@ -40,6 +40,20 @@ export const Sobre = ({ className }: P) => (
   </svg>
 )
 
+export const BolsaIcono = ({ className }: P) => (
+  <svg className={className} viewBox="0 0 30 30" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.3">
+    <path d="M7.5 10.5h15l1 15.5h-17z" strokeLinejoin="round" />
+    <path d="M11.5 13V8.5a3.5 3.5 0 0 1 7 0V13" />
+  </svg>
+)
+
+export const Regla = ({ className }: P) => (
+  <svg className={className} viewBox="0 0 30 20" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.3">
+    <rect x="3" y="6" width="24" height="9" rx="1" />
+    <path d="M7 6v4M11 6v3M15 6v4M19 6v3M23 6v4" />
+  </svg>
+)
+
 export const Flecha = ({ className }: P) => (
   <svg className={className} viewBox="0 0 15 10" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1">
     <path d="M0 5h13.5M9.5 1.5L13.5 5l-4 3.5" />

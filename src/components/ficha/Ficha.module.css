@@ -1,0 +1,400 @@
+/* Ficha de producto: foto grande a la izquierda (mitad de la pantalla, 2:3),
+   panel centrado a la derecha, fotos de detalle en dos columnas y prendas
+   relacionadas al final. Medidas del sitio estático a 1440 y 390 px. */
+.arriba {
+  display: flex;
+  align-items: center;
+}
+.foto {
+  position: relative;
+  flex: 0 0 50%;
+  aspect-ratio: 2 / 3;
+  background: #f2f0ea;
+}
+.foto img,
+.detalles img {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+}
+.detalle {
+  flex: 0 0 50%;
+  padding-left: 70px;
+}
+.interior {
+  max-width: 385px;
+}
+
+/* Migas: "INICIO > TRACK CLUB > CHAQUETAS >" */
+.migas ol {
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 11px;
+  line-height: 1.2;
+}
+.migas li {
+  padding-right: 5px;
+  letter-spacing: 1.1px;
+  color: #888;
+}
+.migas li::after {
+  content: ' >';
+}
+.migas a {
+  position: relative;
+}
+.migas a::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -5px;
+  right: -5px;
+  height: 1px;
+  background: #888;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.3s;
+}
+.migas a:hover::before {
+  transform: scaleX(1);
+}
+
+.categoria {
+  margin-top: 35px;
+  font-size: 14px;
+  line-height: 1.2;
+  letter-spacing: 1.4px;
+}
+.titulo {
+  margin-top: 10px;
+  font-family: var(--display);
+  font-size: clamp(38px, 3.4vw, 54px);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: 0.02em;
+}
+.estado {
+  display: flex;
+}
+.estado li {
+  margin-top: 10px;
+  font-size: 13px;
+  line-height: 1.2;
+  color: #888;
+}
+.precio {
+  margin-top: 15px;
+  font-size: 16px;
+  line-height: 1.2;
+}
+.precio s {
+  margin-right: 8px;
+  color: #888;
+}
+
+/* Selectores de color y talla */
+.selector {
+  display: flex;
+  margin-top: 15px;
+  font-size: 14px;
+  line-height: 1.2;
+}
+.precio + .selector {
+  margin-top: 35px;
+}
+.selector dt {
+  width: 70px;
+}
+.select {
+  width: 90px;
+  padding: 0 20px 0 0;
+  border: 0;
+  border-radius: 0;
+  outline-offset: 2px;
+  appearance: none;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M0 0h10L5 6z' fill='%230a0a0b'/%3E%3C/svg%3E")
+    right center / 9px no-repeat;
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+}
+
+/* Botón negro; al pasar el mouse el texto se corre y aparece una flecha. */
+.agregar {
+  display: block;
+  width: 260px;
+  margin-top: 30px;
+  padding: 20px 0;
+  border: 1px solid #000;
+  background: #000;
+  color: #fff;
+  font-size: 12px;
+  line-height: 1.15;
+  letter-spacing: 1.2px;
+  cursor: pointer;
+}
+.agregar span {
+  position: relative;
+  display: inline-block;
+  transition: transform 0.3s;
+}
+.agregar span::before,
+.agregar span::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  transition: transform 0.3s;
+}
+.agregar span::before {
+  right: -15px;
+  width: 10px;
+  height: 1px;
+  background: #fff;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+.agregar span::after {
+  right: -15px;
+  width: 5px;
+  height: 5px;
+  margin-top: -2.5px;
+  border-top: 1px solid #fff;
+  border-right: 1px solid #fff;
+  transform: rotate(45deg) scale(0);
+}
+.agregar:hover:not(:disabled) span {
+  transform: translateX(-8px);
+}
+.agregar:hover:not(:disabled) span::before {
+  transform: scaleX(1);
+}
+.agregar:hover:not(:disabled) span::after {
+  transform: rotate(45deg) scale(1);
+}
+.agregar:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.agregado {
+  min-height: 16px;
+  margin-top: 10px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--ice-dark);
+}
+
+/* "Ver mi bolsa" y "Guía de tallas": ícono + texto subrayado. */
+.acceso {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 12px;
+  line-height: 1.2;
+  letter-spacing: 1.2px;
+  cursor: pointer;
+}
+.accesoBolsa {
+  margin-top: 20px;
+}
+.acceso svg {
+  width: 30px;
+  height: 20px;
+}
+.accesoBolsa svg {
+  height: 30px;
+}
+.acceso span {
+  position: relative;
+}
+.acceso span::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1px;
+  background: #000;
+  transform-origin: right center;
+  transition: transform 0.5s;
+}
+.acceso:hover span::before {
+  transform: scaleX(0);
+}
+
+/* --- Acordeones: DESCRIPCIÓN, MATERIAL, TALLA ----------------------------- */
+.acordeon {
+  margin-top: 15px;
+  padding-left: 20px;
+  font-size: 12px;
+  line-height: 1.2;
+  letter-spacing: 1.2px;
+}
+.acordeones .acordeon:first-child {
+  margin-top: 40px;
+}
+.acordeon summary {
+  position: relative;
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+}
+.acordeon summary::-webkit-details-marker {
+  display: none;
+}
+/* Signo +/−: línea horizontal fija y una vertical que gira al abrir. */
+.acordeon summary::before,
+.acordeon summary::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: -20px;
+  width: 9px;
+  height: 1px;
+  background: #000;
+}
+.acordeon summary::before {
+  transform: rotate(90deg);
+  transition: transform 0.3s;
+}
+.acordeon[open] summary::before {
+  transform: rotate(0deg);
+}
+.cuerpo {
+  margin-top: 15px;
+  line-height: 1.8;
+}
+.cuerpo p + p,
+.cuerpo table + p {
+  margin-top: 10px;
+}
+.cuerpo strong {
+  font-weight: 700;
+}
+.enlace {
+  position: relative;
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 11px;
+}
+.enlace::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 1px;
+  height: 1px;
+  background: #000;
+  transform-origin: right center;
+  transition: transform 0.5s;
+}
+.enlace:hover::before {
+  transform: scaleX(0);
+}
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  line-height: 1.2;
+  text-align: center;
+}
+.tabla th,
+.tabla td {
+  padding: 8px 4px;
+  border-bottom: 1px solid #e3e0d8;
+  font-weight: 400;
+}
+.tabla thead th {
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #888;
+}
+.tabla tbody th {
+  font-weight: 600;
+}
+.nota {
+  font-size: 10px;
+  color: #888;
+}
+
+/* --- Fotos de detalle: dos columnas a pantalla completa ------------------- */
+.detalles {
+  display: flex;
+  flex-wrap: wrap;
+}
+.detalles li {
+  position: relative;
+  flex: 0 0 50%;
+  aspect-ratio: 2 / 3;
+  background: #f2f0ea;
+}
+
+/* --- También te puede gustar --------------------------------------------- */
+.relacionados {
+  margin: 110px 0;
+}
+.relacionados h2 {
+  font-family: var(--display);
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0.03em;
+  text-align: center;
+}
+.relacionadosLista {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 60px 55px 0;
+}
+.relacionadosItem {
+  width: calc(25% - 24px);
+  margin: 41px 12px;
+}
+
+@media (max-width: 812px) {
+  .ficha {
+    padding-top: 100px;
+  }
+  .arriba {
+    display: block;
+  }
+  .foto {
+    width: 100%;
+  }
+  .detalle {
+    margin: 0 27px;
+    padding: 34px 20px 10px;
+  }
+  .interior {
+    max-width: none;
+  }
+  .migas {
+    margin-bottom: 4px;
+  }
+  .agregar {
+    width: 100%;
+    padding: 22px 0;
+  }
+  .acceso {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .relacionados {
+    margin: 70px 0;
+  }
+  .relacionados h2 {
+    font-size: 30px;
+  }
+  .relacionadosLista {
+    margin: 30px 5px 0;
+  }
+  .relacionadosItem {
+    width: calc(50% - 10px);
+    margin: 15px 5px;
+  }
+}

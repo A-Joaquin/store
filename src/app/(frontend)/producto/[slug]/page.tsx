@@ -1,12 +1,14 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { AcordeonesFicha } from '@/components/AcordeonesFicha'
+import { Tarjeta } from '@/components/catalogo/Tarjeta'
+import { CompraFicha } from '@/components/ficha/CompraFicha'
+import s from '@/components/ficha/Ficha.module.css'
 import { Imagen } from '@/components/Imagen'
 import { JsonLd } from '@/components/JsonLd'
-import { Migas, type Miga } from '@/components/Migas'
-import { PedirWhatsApp } from '@/components/PedirWhatsApp'
-import { Tarjeta } from '@/components/catalogo/Tarjeta'
+import { MigasDatos, type Miga } from '@/components/Migas'
 import { cliente, getAjustes, getProducto, getProductos } from '@/lib/datos'
 import { precioBs } from '@/lib/formato'
 import { absoluta, comoMedia, srcPrincipal, urlCompartir } from '@/lib/imagen'
@@ -123,55 +125,80 @@ export default async function FichaProducto({ params }: Props) {
           offers: oferta(1, url),
         }
 
+  const [principal, ...resto] = fotos
+  const primeraFoto = comoMedia(principal)
+
   return (
-    <article className="ficha provisional">
-      <Migas items={migas} />
+    <article className={s.ficha}>
+      <div className={s.arriba}>
+        <div className={s.foto}>
+          {/* La foto principal es el LCP de la ficha. */}
+          <Imagen media={principal} prioridad sizes="(max-width: 812px) 100vw, 50vw" />
+        </div>
+        <div className={s.detalle}>
+          <div className={s.interior}>
+            {/* Como el sitio estático: INICIO > COLECCIÓN > CATEGORÍA > */}
+            <nav aria-label="Migas de pan" className={s.migas}>
+              <ol>
+                <li>
+                  <Link href="/">INICIO</Link>
+                </li>
+                {coleccion && (
+                  <li>
+                    <Link href={rutaColeccion(coleccion.slug)}>{coleccion.nombre.toUpperCase()}</Link>
+                  </li>
+                )}
+                {tipo?.categoria && <li>{tipo.categoria}</li>}
+              </ol>
+            </nav>
+            {coleccion && <p className={s.categoria}>{coleccion.nombre.toUpperCase()}</p>}
+            <h1 className={s.titulo}>{producto.nombre}</h1>
+            <ul className={s.estado}>
+              <li>NUEVO</li>
+            </ul>
+            <p className={s.precio}>
+              {producto.precioAnterior ? <s>{precioBs(producto.precioAnterior)}</s> : null}
+              {precioBs(producto.precio)}
+            </p>
 
-      <div className="ficha__galeria">
-        {fotos.map((f, i) => (
-          <Imagen
-            key={typeof f === 'object' ? f.id : f}
-            media={f}
-            // La primera foto es el LCP de la ficha.
-            prioridad={i === 0}
-            sizes={i === 0 ? '(max-width: 767px) 100vw, 60vw' : '(max-width: 767px) 100vw, 30vw'}
-          />
-        ))}
+            <CompraFicha
+              slug={producto.slug}
+              nombre={producto.nombre}
+              precio={producto.precio}
+              imagen={primeraFoto ? srcPrincipal(primeraFoto) : null}
+              color={producto.color}
+              tallas={tallas.map((t) => ({ talla: t.talla, stock: t.stock }))}
+            />
+
+            <AcordeonesFicha producto={producto} tipo={tipo} coleccion={coleccion} ajustes={ajustes} />
+          </div>
+        </div>
       </div>
 
-      <div className="ficha__panel">
-        {coleccion && <p className="ficha__coleccion">{coleccion.nombre}</p>}
-        <h1>{producto.nombre}</h1>
-        <p className="ficha__precio">
-          {producto.precioAnterior ? <s>{precioBs(producto.precioAnterior)}</s> : null} {precioBs(producto.precio)}
-        </p>
-
-        <p className="ficha__color">
-          Color: <strong>{producto.color}</strong>
-        </p>
-
-        <PedirWhatsApp
-          nombre={producto.nombre}
-          color={producto.color}
-          url={url}
-          tallas={tallas.map((t) => ({ talla: t.talla, stock: t.stock }))}
-          whatsapp={ajustes.whatsapp}
-        />
-
-        <AcordeonesFicha producto={producto} tipo={tipo} coleccion={coleccion} ajustes={ajustes} />
-      </div>
+      {resto.length > 0 && (
+        <ul className={s.detalles}>
+          {resto.map((f) => (
+            <li key={typeof f === 'object' ? f.id : f}>
+              <Imagen media={f} sizes="50vw" />
+            </li>
+          ))}
+        </ul>
+      )}
 
       {relacionados.length > 0 && (
-        <section aria-labelledby="titulo-relacionados" className="ficha__relacionados">
-          <h2 id="titulo-relacionados">Completa el look</h2>
-          <div className="grilla">
-            {relacionados.map((p) => (
-              <Tarjeta key={p.id} prenda={aTarjeta(p)} />
+        <section aria-labelledby="titulo-relacionados" className={s.relacionados}>
+          <h2 id="titulo-relacionados">TAMBIÉN TE PUEDE GUSTAR</h2>
+          <div className={s.relacionadosLista}>
+            {relacionados.slice(0, 4).map((p) => (
+              <div key={p.id} className={s.relacionadosItem}>
+                <Tarjeta prenda={aTarjeta(p)} sizes="(max-width: 812px) 50vw, 25vw" />
+              </div>
             ))}
           </div>
         </section>
       )}
 
+      <MigasDatos items={migas} />
       <JsonLd datos={productoLd} />
     </article>
   )
