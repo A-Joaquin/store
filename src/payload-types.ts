@@ -69,6 +69,7 @@ export interface Config {
   collections: {
     productos: Producto;
     colecciones: Coleccion;
+    tipos: Tipo;
     media: Media;
     users: User;
     'payload-kv': PayloadKv;
@@ -80,6 +81,7 @@ export interface Config {
   collectionsSelect: {
     productos: ProductosSelect<false> | ProductosSelect<true>;
     colecciones: ColeccionesSelect<false> | ColeccionesSelect<true>;
+    tipos: TiposSelect<false> | TiposSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -134,24 +136,36 @@ export interface UserAuthOperations {
 export interface Producto {
   id: number;
   nombre: string;
-  tipo: 'polera' | 'manga-larga' | 'chaqueta' | 'pantalon' | 'conjunto' | 'accesorio';
+  /**
+   * Define el material por defecto y la tabla de medidas.
+   */
+  tipo: number | Tipo;
+  /**
+   * Ej.: Hueso, Negro, Abismo
+   */
+  color: string;
+  coleccion?: (number | null) | Coleccion;
   precio: number;
   /**
    * Opcional: se muestra tachado si hay descuento.
    */
   precioAnterior?: number | null;
-  coleccion?: (number | null) | Coleccion;
   /**
    * La primera foto es la principal (tarjeta, ficha y Google).
    */
   galeria: (number | Media)[];
   fotosDetalle?: (number | Media)[] | null;
   /**
-   * Única para cada prenda: corte, tela, calce. Google penaliza textos repetidos.
+   * Acordeón DESCRIPCIÓN. Única para cada prenda: corte, tela, calce. Google penaliza textos repetidos.
    */
   descripcion: string;
+  /**
+   * Acordeón MATERIAL. Opcional: si queda vacío se usa el del tipo de prenda.
+   */
   material?: string | null;
-  medidas?: string | null;
+  /**
+   * Opcional: si queda vacío se usa el texto de Ajustes de la tienda.
+   */
   cuidado?: string | null;
   tallas?:
     | {
@@ -183,6 +197,52 @@ export interface Producto {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * Material y tabla de medidas que comparten todas las prendas del mismo tipo (acordeones MATERIAL y TALLA de la ficha).
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tipos".
+ */
+export interface Tipo {
+  id: number;
+  /**
+   * Ej.: Polera, Manga Larga, Chaqueta
+   */
+  nombre: string;
+  /**
+   * En plural, como se muestra en la tienda. Ej.: POLERAS
+   */
+  categoria?: string | null;
+  /**
+   * Se muestra en MATERIAL si la prenda no tiene uno propio.
+   */
+  material: string;
+  /**
+   * Ej.: Largo, Ancho pecho, Manga.
+   */
+  columnas?:
+    | {
+        nombre: string;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Una fila por talla, con los valores en el mismo orden que las columnas. En la ficha solo se muestran las tallas que tiene cada prenda.
+   */
+  medidas?:
+    | {
+        talla: 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'Única';
+        c1?: number | null;
+        c2?: number | null;
+        c3?: number | null;
+        c4?: number | null;
+        id?: string | null;
+      }[]
+    | null;
+  nota?: string | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -345,6 +405,10 @@ export interface PayloadLockedDocument {
         value: number | Coleccion;
       } | null)
     | ({
+        relationTo: 'tipos';
+        value: number | Tipo;
+      } | null)
+    | ({
         relationTo: 'media';
         value: number | Media;
       } | null)
@@ -401,14 +465,14 @@ export interface PayloadMigration {
 export interface ProductosSelect<T extends boolean = true> {
   nombre?: T;
   tipo?: T;
+  color?: T;
+  coleccion?: T;
   precio?: T;
   precioAnterior?: T;
-  coleccion?: T;
   galeria?: T;
   fotosDetalle?: T;
   descripcion?: T;
   material?: T;
-  medidas?: T;
   cuidado?: T;
   tallas?:
     | T
@@ -451,6 +515,34 @@ export interface ColeccionesSelect<T extends boolean = true> {
         description?: T;
         image?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "tipos_select".
+ */
+export interface TiposSelect<T extends boolean = true> {
+  nombre?: T;
+  categoria?: T;
+  material?: T;
+  columnas?:
+    | T
+    | {
+        nombre?: T;
+        id?: T;
+      };
+  medidas?:
+    | T
+    | {
+        talla?: T;
+        c1?: T;
+        c2?: T;
+        c3?: T;
+        c4?: T;
+        id?: T;
+      };
+  nota?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -642,6 +734,17 @@ export interface Ajustes {
    */
   whatsapp?: string | null;
   email?: string | null;
+  ficha?: {
+    /**
+     * Va después de "Colección X."
+     */
+    origen?: string | null;
+    cuidado?: string | null;
+    /**
+     * Ej.: /cambios-y-devoluciones. Si queda vacío no se muestra.
+     */
+    enlaceCambios?: string | null;
+  };
   redes?: {
     instagram?: string | null;
     tiktok?: string | null;
@@ -678,6 +781,13 @@ export interface AjustesSelect<T extends boolean = true> {
   descripcion?: T;
   whatsapp?: T;
   email?: T;
+  ficha?:
+    | T
+    | {
+        origen?: T;
+        cuidado?: T;
+        enlaceCambios?: T;
+      };
   redes?:
     | T
     | {

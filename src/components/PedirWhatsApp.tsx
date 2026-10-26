@@ -6,6 +6,7 @@ type Talla = { talla: string; stock: number }
 
 type Props = {
   nombre: string
+  color: string
   url: string
   tallas: Talla[]
   whatsapp?: string | null
@@ -13,10 +14,10 @@ type Props = {
 
 // Fase 1: el pedido se cierra por WhatsApp. En la fase 2 este bloque pasa a
 // "Agregar al carrito".
-export function PedirWhatsApp({ nombre, url, tallas, whatsapp }: Props) {
+export function PedirWhatsApp({ nombre, color, url, tallas, whatsapp }: Props) {
   const [talla, setTalla] = useState<string | null>(tallas.length === 1 ? tallas[0].talla : null)
   const numero = whatsapp?.replace(/\D/g, '')
-  const mensaje = `Hola, quiero pedir: ${nombre}${talla ? ` — talla ${talla}` : ''}\n${url}`
+  const mensaje = `Hola, quiero pedir: ${nombre} (${color})${talla ? ` — talla ${talla}` : ''}\n${url}`
 
   return (
     <div className="pedido">

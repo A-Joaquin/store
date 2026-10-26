@@ -11,6 +11,7 @@ import sharp from 'sharp'
 import { Colecciones } from './collections/Colecciones'
 import { Media } from './collections/Media'
 import { Productos } from './collections/Productos'
+import { Tipos } from './collections/Tipos'
 import { Users } from './collections/Users'
 import { Ajustes } from './globals/Ajustes'
 import { Portada } from './globals/Portada'
@@ -42,7 +43,7 @@ export default buildConfig({
     supportedLanguages: { es },
     fallbackLanguage: 'es',
   },
-  collections: [Productos, Colecciones, Media, Users],
+  collections: [Productos, Colecciones, Tipos, Media, Users],
   globals: [Portada, Ajustes],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

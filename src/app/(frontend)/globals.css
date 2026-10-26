@@ -252,12 +252,50 @@ main {
   opacity: 0.5;
 }
 
+.ficha__coleccion {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+.ficha__color {
+  margin: 16px 0 0;
+}
+
+.acordeones {
+  margin-top: 32px;
+}
 .acordeon {
   border-top: 1px solid #ffffff22;
   padding: 12px 0;
 }
 .acordeon summary {
   cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 13px;
+}
+
+.tabla-medidas {
+  width: 100%;
+  margin-top: 12px;
+  border-collapse: collapse;
+  font-size: 13px;
+  text-align: center;
+}
+.tabla-medidas th,
+.tabla-medidas td {
+  padding: 8px 4px;
+  border-bottom: 1px solid #ffffff1a;
+}
+.tabla-medidas thead th {
+  font-weight: 500;
+  color: var(--steel);
+}
+.tabla-medidas__nota {
+  font-size: 12px;
+  color: var(--steel);
 }
 
 .pie {

@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
+import { AcordeonesFicha } from '@/components/AcordeonesFicha'
 import { Imagen } from '@/components/Imagen'
 import { JsonLd } from '@/components/JsonLd'
 import { Migas, type Miga } from '@/components/Migas'
@@ -56,6 +57,7 @@ export default async function FichaProducto({ params }: Props) {
   if (!producto) notFound()
 
   const coleccion = coleccionDe(producto)
+  const tipo = typeof producto.tipo === 'object' ? producto.tipo : null
   const tallas = producto.tallas ?? []
   const url = SITE_URL + rutaProducto(producto.slug)
   const fotos = [...producto.galeria, ...(producto.fotosDetalle ?? [])]
@@ -107,11 +109,18 @@ export default async function FichaProducto({ params }: Props) {
             name: `${producto.nombre} — ${t.talla}`,
             sku: t.sku || `${producto.sku || producto.slug}-${t.talla}`,
             size: t.talla,
+            color: producto.color,
             image: imagenesLd[0],
             offers: oferta(t.stock, `${url}?talla=${encodeURIComponent(t.talla)}`),
           })),
         }
-      : { ...base, '@type': 'Product', sku: producto.sku || producto.slug, offers: oferta(1, url) }
+      : {
+          ...base,
+          '@type': 'Product',
+          sku: producto.sku || producto.slug,
+          color: producto.color,
+          offers: oferta(1, url),
+        }
 
   return (
     <article className="ficha">
@@ -130,33 +139,25 @@ export default async function FichaProducto({ params }: Props) {
       </div>
 
       <div className="ficha__panel">
+        {coleccion && <p className="ficha__coleccion">{coleccion.nombre}</p>}
         <h1>{producto.nombre}</h1>
         <p className="ficha__precio">
           {producto.precioAnterior ? <s>{precioBs(producto.precioAnterior)}</s> : null} {precioBs(producto.precio)}
         </p>
-        <p>{producto.descripcion}</p>
+
+        <p className="ficha__color">
+          Color: <strong>{producto.color}</strong>
+        </p>
 
         <PedirWhatsApp
           nombre={producto.nombre}
+          color={producto.color}
           url={url}
           tallas={tallas.map((t) => ({ talla: t.talla, stock: t.stock }))}
           whatsapp={ajustes.whatsapp}
         />
 
-        {(
-          [
-            ['Material', producto.material],
-            ['Medidas (cm)', producto.medidas],
-            ['Cuidado', producto.cuidado],
-          ] as const
-        ).map(([titulo, texto]) =>
-          texto ? (
-            <details key={titulo} className="acordeon">
-              <summary>{titulo}</summary>
-              <p>{texto}</p>
-            </details>
-          ) : null,
-        )}
+        <AcordeonesFicha producto={producto} tipo={tipo} coleccion={coleccion} ajustes={ajustes} />
       </div>
 
       {relacionados.length > 0 && (

@@ -1,6 +1,7 @@
 import type { GlobalConfig } from 'payload'
 
 import { revalidarTodo } from '@/lib/revalidar'
+import { CUIDADO, ORIGEN } from '@/lib/textos'
 
 export const Ajustes: GlobalConfig = {
   slug: 'ajustes',
@@ -26,6 +27,32 @@ export const Ajustes: GlobalConfig = {
       admin: { description: 'Con código de país y sin espacios. Ej.: 59170000000' },
     },
     { name: 'email', type: 'email' },
+    {
+      name: 'ficha',
+      label: 'Textos de la ficha de producto',
+      type: 'group',
+      fields: [
+        {
+          name: 'origen',
+          label: 'Línea de origen (DESCRIPCIÓN)',
+          type: 'text',
+          defaultValue: ORIGEN,
+          admin: { description: 'Va después de "Colección X."' },
+        },
+        {
+          name: 'cuidado',
+          label: 'Cuidado por defecto (MATERIAL)',
+          type: 'textarea',
+          defaultValue: CUIDADO,
+        },
+        {
+          name: 'enlaceCambios',
+          label: 'Enlace "Cambios y devoluciones"',
+          type: 'text',
+          admin: { description: 'Ej.: /cambios-y-devoluciones. Si queda vacío no se muestra.' },
+        },
+      ],
+    },
     {
       name: 'redes',
       type: 'group',

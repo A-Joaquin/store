@@ -5,15 +5,6 @@ import { revalidar } from '@/lib/revalidar'
 
 export const TALLAS = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'Única'] as const
 
-export const TIPOS = [
-  { label: 'Polera', value: 'polera' },
-  { label: 'Manga larga', value: 'manga-larga' },
-  { label: 'Chaqueta', value: 'chaqueta' },
-  { label: 'Pantalón', value: 'pantalon' },
-  { label: 'Conjunto', value: 'conjunto' },
-  { label: 'Accesorio', value: 'accesorio' },
-]
-
 export const Productos: CollectionConfig = {
   slug: 'productos',
   labels: { singular: 'Producto', plural: 'Productos' },
@@ -37,9 +28,28 @@ export const Productos: CollectionConfig = {
         { name: 'nombre', type: 'text', required: true },
         {
           name: 'tipo',
-          type: 'select',
+          label: 'Tipo de prenda',
+          type: 'relationship',
+          relationTo: 'tipos',
           required: true,
-          options: TIPOS,
+          admin: { description: 'Define el material por defecto y la tabla de medidas.' },
+        },
+      ],
+    },
+    {
+      type: 'row',
+      fields: [
+        {
+          name: 'color',
+          type: 'text',
+          required: true,
+          admin: { description: 'Ej.: Hueso, Negro, Abismo' },
+        },
+        {
+          name: 'coleccion',
+          label: 'Colección',
+          type: 'relationship',
+          relationTo: 'colecciones',
         },
       ],
     },
@@ -61,12 +71,6 @@ export const Productos: CollectionConfig = {
           admin: { description: 'Opcional: se muestra tachado si hay descuento.' },
         },
       ],
-    },
-    {
-      name: 'coleccion',
-      label: 'Colección',
-      type: 'relationship',
-      relationTo: 'colecciones',
     },
     {
       name: 'galeria',
@@ -91,12 +95,20 @@ export const Productos: CollectionConfig = {
       type: 'textarea',
       required: true,
       admin: {
-        description: 'Única para cada prenda: corte, tela, calce. Google penaliza textos repetidos.',
+        description:
+          'Acordeón DESCRIPCIÓN. Única para cada prenda: corte, tela, calce. Google penaliza textos repetidos.',
       },
     },
-    { name: 'material', type: 'textarea' },
-    { name: 'medidas', label: 'Medidas (cm)', type: 'textarea' },
-    { name: 'cuidado', label: 'Cuidado', type: 'textarea' },
+    {
+      name: 'material',
+      type: 'textarea',
+      admin: { description: 'Acordeón MATERIAL. Opcional: si queda vacío se usa el del tipo de prenda.' },
+    },
+    {
+      name: 'cuidado',
+      type: 'textarea',
+      admin: { description: 'Opcional: si queda vacío se usa el texto de Ajustes de la tienda.' },
+    },
     {
       name: 'tallas',
       type: 'array',
