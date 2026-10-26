@@ -1,0 +1,286 @@
+/* Base provisional: tokens de la marca y layout mínimo. Al migrar el diseño
+   (fase 1, inventario §3) cada componente pasa a su propio CSS Module. */
+:root {
+  --ink: #0a0a0b;
+  --bone: #e8e4dc;
+  --steel: #8a8f98;
+  --ice: #a9c7e3;
+  --display: var(--font-display), serif;
+  --gutter: clamp(16px, 4vw, 48px);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--ink);
+  color: var(--bone);
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+}
+
+h1,
+h2 {
+  font-family: var(--display);
+  font-weight: 400;
+}
+
+.solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.saltar {
+  position: absolute;
+  left: -9999px;
+}
+.saltar:focus {
+  left: var(--gutter);
+  top: 8px;
+  z-index: 10;
+  background: var(--bone);
+  color: var(--ink);
+  padding: 8px 12px;
+}
+
+.cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 16px var(--gutter);
+}
+.cabecera__logo img {
+  width: 150px;
+}
+.cabecera__menu,
+.pie__redes,
+.migas ol {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+main {
+  padding: 0 var(--gutter) 64px;
+}
+
+.hero {
+  position: relative;
+  margin: 0 calc(var(--gutter) * -1);
+}
+.hero__img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+@media (max-width: 767px) {
+  .hero__img {
+    aspect-ratio: 3 / 4;
+  }
+}
+.hero__titulo {
+  position: absolute;
+  left: var(--gutter);
+  bottom: 24px;
+  margin: 0;
+  font-family: var(--display);
+  font-size: clamp(32px, 6vw, 72px);
+}
+
+.manifiesto {
+  max-width: 60ch;
+  margin: 48px auto;
+  text-align: center;
+}
+
+.colecciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 32px 0;
+}
+
+.grilla {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px 12px;
+}
+@media (min-width: 768px) {
+  .grilla {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1200px) {
+  .grilla {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.tarjeta__enlace {
+  text-decoration: none;
+}
+/* Relación fija: la tarjeta reserva su espacio antes de que llegue la foto. */
+.tarjeta__foto img {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+}
+.tarjeta__nombre {
+  margin: 8px 0 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+.tarjeta__precio,
+.ficha__precio {
+  margin: 4px 0 0;
+  color: var(--steel);
+}
+
+.migas {
+  margin: 16px 0;
+  font-size: 13px;
+  color: var(--steel);
+}
+.migas li + li::before {
+  content: '/';
+  margin-right: 16px;
+}
+
+.ficha {
+  display: grid;
+  gap: 32px;
+}
+@media (min-width: 900px) {
+  .ficha {
+    grid-template-columns: 3fr 2fr;
+  }
+  .ficha > .migas,
+  .ficha__relacionados {
+    grid-column: 1 / -1;
+  }
+  .ficha__panel {
+    position: sticky;
+    top: 24px;
+    align-self: start;
+  }
+}
+.ficha__galeria {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+.ficha__galeria img {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+}
+.ficha__galeria img:first-child {
+  grid-column: 1 / -1;
+}
+
+.pedido__tallas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 24px 0;
+  padding: 0;
+  border: 0;
+}
+.pedido__tallas legend {
+  margin-bottom: 8px;
+}
+.pedido__tallas input {
+  position: absolute;
+  opacity: 0;
+}
+.pedido__tallas span {
+  display: inline-block;
+  min-width: 48px;
+  padding: 10px 12px;
+  border: 1px solid var(--steel);
+  text-align: center;
+  cursor: pointer;
+}
+.pedido__tallas input:checked + span {
+  background: var(--bone);
+  color: var(--ink);
+}
+.pedido__tallas input:focus-visible + span {
+  outline: 2px solid var(--ice);
+  outline-offset: 2px;
+}
+.pedido__tallas .agotada span {
+  opacity: 0.4;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+
+.boton {
+  display: inline-block;
+  padding: 14px 24px;
+  background: var(--bone);
+  color: var(--ink);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 13px;
+}
+.boton[aria-disabled='true'] {
+  opacity: 0.5;
+}
+
+.acordeon {
+  border-top: 1px solid #ffffff22;
+  padding: 12px 0;
+}
+.acordeon summary {
+  cursor: pointer;
+}
+
+.pie {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 32px var(--gutter);
+  border-top: 1px solid #ffffff22;
+  font-size: 13px;
+  color: var(--steel);
+}
+
+.no-encontrado {
+  padding: 96px 0;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
