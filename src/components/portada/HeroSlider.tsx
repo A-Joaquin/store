@@ -95,8 +95,9 @@ export function HeroSlider({ slides, children }: Props) {
   const siguiente = () => ir(actual + 1, true)
   const anterior = () => ir(actual - 1, false)
 
-  // Deslizar con el dedo en móvil.
-  const toque = useRef<number | null>(null)
+  // Como el sitio estático: arrastrar (mouse o dedo) más de 10 px cambia de
+  // foto con la transición; un clic sin arrastre lleva al enlace del slide.
+  const arrastre = useRef<{ x: number; dx: number } | null>(null)
 
   if (total === 0) return null
   const enlace = slides[actual].enlace
@@ -105,14 +106,23 @@ export function HeroSlider({ slides, children }: Props) {
     <section className={s.hero} aria-roledescription="carrusel" aria-label="Campaña">
       <div
         className={s.fotos}
-        onClick={() => enlace && router.push(enlace)}
-        onTouchStart={(e) => (toque.current = e.touches[0].clientX)}
-        onTouchEnd={(e) => {
-          if (toque.current === null) return
-          const dx = e.changedTouches[0].clientX - toque.current
-          toque.current = null
-          if (Math.abs(dx) > 40) (dx < 0 ? siguiente : anterior)()
+        onPointerDown={(e) => {
+          if (e.button !== 0) return
+          arrastre.current = { x: e.clientX, dx: 0 }
         }}
+        onPointerMove={(e) => {
+          if (arrastre.current) arrastre.current.dx = e.clientX - arrastre.current.x
+        }}
+        onPointerUp={() => {
+          const a = arrastre.current
+          arrastre.current = null
+          if (!a) return
+          if (a.dx > 10) anterior()
+          else if (a.dx < -10) siguiente()
+          else if (enlace) router.push(enlace)
+        }}
+        onPointerCancel={() => (arrastre.current = null)}
+        onPointerLeave={() => (arrastre.current = null)}
       >
         {sinWebgl
           ? slides.map((sl, i) =>

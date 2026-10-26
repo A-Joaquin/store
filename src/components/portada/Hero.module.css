@@ -10,6 +10,16 @@
   position: absolute;
   inset: 0;
   cursor: pointer;
+  /* Se puede arrastrar para cambiar de foto: sin selección ni arrastre de la
+     imagen del navegador, y en el celular el gesto vertical sigue desplazando
+     la página. */
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: pan-y;
+}
+.fotos img {
+  -webkit-user-drag: none;
+  pointer-events: none;
 }
 /* Primera foto como imagen normal (carga rápida y SEO). El canvas aparece
    encima con un fundido cuando WebGL está listo. */
