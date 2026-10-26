@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
 import s from './Hero.module.css'
-import { DURACION_TRANSICION, HeroWebgl } from './heroWebgl'
+import { HeroWebgl } from './heroWebgl'
 
 export type FotoHero = { src: string; srcMovil: string | null; alt: string }
 export type SlideHero = { foto: FotoHero; enlace: string | null }
@@ -31,7 +31,9 @@ export function HeroSlider({ slides, children }: Props) {
   const router = useRouter()
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const motor = useRef<HeroWebgl | null>(null)
-  const bloqueado = useRef(false)
+  // Cambio pedido a una foto que aún no cargó: se hace apenas llega.
+  const pendiente = useRef<{ d: number; haciaAdelante: boolean } | null>(null)
+  const irRef = useRef<(d: number, haciaAdelante: boolean) => void>(() => {})
   const [actual, setActual] = useState(0)
   const [canvasListo, setCanvasListo] = useState(false)
   const [sinWebgl, setSinWebgl] = useState(false)
@@ -66,7 +68,12 @@ export function HeroSlider({ slides, children }: Props) {
         // El resto de las fotos, después de la primera (no compiten con el LCP).
         slides.slice(1).forEach((_, j) =>
           cargar(fuente(j + 1))
-            .then((img) => vivo && m.ponerFoto(j + 1, img))
+            .then((img) => {
+              if (!vivo) return
+              m.ponerFoto(j + 1, img)
+              const p = pendiente.current
+              if (p?.d === j + 1) irRef.current(p.d, p.haciaAdelante)
+            })
             .catch(() => {}),
         )
       })
@@ -82,16 +89,25 @@ export function HeroSlider({ slides, children }: Props) {
     }
   }, [slides, total])
 
+  // Sin bloqueo: un clic o arrastre durante una transición la interrumpe y
+  // arranca la siguiente al instante (misma animación), para que los gestos
+  // rápidos siempre cambien de foto.
   const ir = (destino: number, haciaAdelante: boolean) => {
-    if (bloqueado.current || total < 2) return
+    if (total < 2) return
     const d = (destino + total) % total
-    if (motor.current && !motor.current.listo(d)) return
-    bloqueado.current = true
-    setTimeout(() => (bloqueado.current = false), DURACION_TRANSICION)
+    // Foto aún sin cargar: se espera a que llegue y entonces se cambia.
+    if (motor.current && !motor.current.listo(d)) {
+      pendiente.current = { d, haciaAdelante }
+      return
+    }
+    pendiente.current = null
     motor.current?.ir(d, haciaAdelante)
     setActual(d)
     setVuelta((v) => v + 1)
   }
+  useEffect(() => {
+    irRef.current = ir
+  })
   const siguiente = () => ir(actual + 1, true)
   const anterior = () => ir(actual - 1, false)
 
@@ -112,6 +128,8 @@ export function HeroSlider({ slides, children }: Props) {
         onPointerDown={(e) => {
           if (e.button !== 0) return
           arrastre.current = { x: e.clientX, dx: 0 }
+          // El gesto sigue contando aunque el mouse salga del hero al arrastrar rápido.
+          e.currentTarget.setPointerCapture(e.pointerId)
         }}
         onPointerMove={(e) => {
           if (arrastre.current) arrastre.current.dx = e.clientX - arrastre.current.x
@@ -125,7 +143,6 @@ export function HeroSlider({ slides, children }: Props) {
           else if (enlace) router.push(enlace)
         }}
         onPointerCancel={() => (arrastre.current = null)}
-        onPointerLeave={() => (arrastre.current = null)}
       >
         {sinWebgl
           ? slides.map((sl, i) =>
