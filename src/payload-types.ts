@@ -70,6 +70,8 @@ export interface Config {
     productos: Producto;
     colecciones: Coleccion;
     tipos: Tipo;
+    inventario: ItemInventario;
+    pedidos: Pedido;
     media: Media;
     users: User;
     'payload-kv': PayloadKv;
@@ -82,6 +84,8 @@ export interface Config {
     productos: ProductosSelect<false> | ProductosSelect<true>;
     colecciones: ColeccionesSelect<false> | ColeccionesSelect<true>;
     tipos: TiposSelect<false> | TiposSelect<true>;
+    inventario: InventarioSelect<false> | InventarioSelect<true>;
+    pedidos: PedidosSelect<false> | PedidosSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -170,7 +174,6 @@ export interface Producto {
   tallas?:
     | {
         talla: 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'Única';
-        stock: number;
         sku?: string | null;
         id?: string | null;
       }[]
@@ -346,6 +349,83 @@ export interface Media {
   };
 }
 /**
+ * Unidades disponibles por talla. Los pedidos pendientes ya están descontados (reservados). Stock bajo: 2 o menos.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inventario".
+ */
+export interface ItemInventario {
+  id: number;
+  producto: number | Producto;
+  talla: 'XS' | 'S' | 'M' | 'L' | 'XL' | 'XXL' | 'Única';
+  stock: number;
+  etiqueta?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * Pendiente = stock reservado, esperando el pago por WhatsApp (48 h). Al pasar a Confirmado es una venta. Cancelar devuelve el stock.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pedidos".
+ */
+export interface Pedido {
+  id: number;
+  numero?: string | null;
+  estado: 'pendiente' | 'confirmado' | 'preparando' | 'enviado' | 'entregado' | 'cancelado';
+  nombre: string;
+  telefono: string;
+  email?: string | null;
+  documento?: string | null;
+  razonSocial?: string | null;
+  metodo: 'envio' | 'recojo';
+  ciudad?:
+    | (
+        | 'La Paz'
+        | 'El Alto'
+        | 'Cochabamba'
+        | 'Santa Cruz'
+        | 'Oruro'
+        | 'Potosí'
+        | 'Sucre'
+        | 'Tarija'
+        | 'Trinidad'
+        | 'Cobija'
+      )
+    | null;
+  direccion?: string | null;
+  items: {
+    producto: number | Producto;
+    nombre: string;
+    talla: string;
+    cantidad: number;
+    precio: number;
+    id?: string | null;
+  }[];
+  subtotal: number;
+  envio?: number | null;
+  total: number;
+  notas?: string | null;
+  notasInternas?: string | null;
+  historial?:
+    | {
+        estado?: string | null;
+        fecha?: string | null;
+        nota?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Si sigue pendiente después de esta hora, se cancela y el stock vuelve.
+   */
+  reservaHasta?: string | null;
+  stockReservado?: boolean | null;
+  seguimiento?: string | null;
+  simulado?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
@@ -407,6 +487,14 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'tipos';
         value: number | Tipo;
+      } | null)
+    | ({
+        relationTo: 'inventario';
+        value: number | ItemInventario;
+      } | null)
+    | ({
+        relationTo: 'pedidos';
+        value: number | Pedido;
       } | null)
     | ({
         relationTo: 'media';
@@ -478,7 +566,6 @@ export interface ProductosSelect<T extends boolean = true> {
     | T
     | {
         talla?: T;
-        stock?: T;
         sku?: T;
         id?: T;
       };
@@ -543,6 +630,63 @@ export interface TiposSelect<T extends boolean = true> {
         id?: T;
       };
   nota?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "inventario_select".
+ */
+export interface InventarioSelect<T extends boolean = true> {
+  producto?: T;
+  talla?: T;
+  stock?: T;
+  etiqueta?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pedidos_select".
+ */
+export interface PedidosSelect<T extends boolean = true> {
+  numero?: T;
+  estado?: T;
+  nombre?: T;
+  telefono?: T;
+  email?: T;
+  documento?: T;
+  razonSocial?: T;
+  metodo?: T;
+  ciudad?: T;
+  direccion?: T;
+  items?:
+    | T
+    | {
+        producto?: T;
+        nombre?: T;
+        talla?: T;
+        cantidad?: T;
+        precio?: T;
+        id?: T;
+      };
+  subtotal?: T;
+  envio?: T;
+  total?: T;
+  notas?: T;
+  notasInternas?: T;
+  historial?:
+    | T
+    | {
+        estado?: T;
+        fecha?: T;
+        nota?: T;
+        id?: T;
+      };
+  reservaHasta?: T;
+  stockReservado?: T;
+  seguimiento?: T;
+  simulado?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -734,6 +878,35 @@ export interface Ajustes {
    */
   whatsapp?: string | null;
   email?: string | null;
+  envios?: {
+    /**
+     * Ciudades de abajo.
+     */
+    costoLocal?: number | null;
+    costoNacional?: number | null;
+    /**
+     * 0 = nunca gratis.
+     */
+    gratisDesde?: number | null;
+    ciudadesLocales?:
+      | (
+          | 'La Paz'
+          | 'El Alto'
+          | 'Cochabamba'
+          | 'Santa Cruz'
+          | 'Oruro'
+          | 'Potosí'
+          | 'Sucre'
+          | 'Tarija'
+          | 'Trinidad'
+          | 'Cobija'
+        )[]
+      | null;
+    /**
+     * Si queda vacío, no se ofrece el recojo en tienda.
+     */
+    recojo?: string | null;
+  };
   ficha?: {
     /**
      * Va después de "Colección X."
@@ -781,6 +954,15 @@ export interface AjustesSelect<T extends boolean = true> {
   descripcion?: T;
   whatsapp?: T;
   email?: T;
+  envios?:
+    | T
+    | {
+        costoLocal?: T;
+        costoNacional?: T;
+        gratisDesde?: T;
+        ciudadesLocales?: T;
+        recojo?: T;
+      };
   ficha?:
     | T
     | {

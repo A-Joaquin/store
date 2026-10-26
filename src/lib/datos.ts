@@ -3,6 +3,7 @@ import { getPayload } from 'payload'
 import { cache } from 'react'
 
 import { comoMedia } from './imagen'
+import { stockDe } from './pedidos/stock'
 import type { PrendaMenu } from './navegacion'
 
 // overrideAccess: false aplica las reglas de acceso de un visitante: solo
@@ -70,6 +71,11 @@ export const getPrendasMenu = cache(async (): Promise<PrendaMenu[]> => {
     }
   })
 })
+
+// Stock disponible por "<productoId>:<talla>".
+export async function getStock(ids: number[]) {
+  return stockDe(await cliente(), ids)
+}
 
 export async function getProductos(opciones: { coleccion?: number; excluir?: number; limit?: number } = {}) {
   const and = []

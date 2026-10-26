@@ -6,7 +6,7 @@ import { Hero } from '@/components/portada/Hero'
 import { Intro } from '@/components/portada/Intro'
 import { Presentacion } from '@/components/portada/Presentacion'
 import { Divisor, Interludio, Manifiesto } from '@/components/portada/Secciones'
-import { getColecciones, getPortada, getProductos } from '@/lib/datos'
+import { getColecciones, getPortada, getProductos, getStock } from '@/lib/datos'
 import { MARCA, rutaColeccion } from '@/lib/sitio'
 import { aTarjeta } from '@/lib/tarjeta'
 
@@ -17,6 +17,7 @@ export const metadata: Metadata = {
 export default async function Inicio() {
   const [portada, colecciones] = await Promise.all([getPortada(), getColecciones()])
   const prendasPorColeccion = await Promise.all(colecciones.map((c) => getProductos({ coleccion: c.id })))
+  const stock = await getStock(prendasPorColeccion.flat().map((p) => p.id))
 
   return (
     <>
@@ -34,7 +35,7 @@ export default async function Inicio() {
           <BloqueColeccion
             id={c.slug}
             titulo={c.nombre}
-            prendas={prendasPorColeccion[i].map(aTarjeta)}
+            prendas={prendasPorColeccion[i].map((p) => aTarjeta(p, stock))}
             verTodo={rutaColeccion(c.slug)}
           />
         </Fragment>

@@ -9,7 +9,9 @@ import { fileURLToPath } from 'url'
 import sharp from 'sharp'
 
 import { Colecciones } from './collections/Colecciones'
+import { Inventario } from './collections/Inventario'
 import { Media } from './collections/Media'
+import { Pedidos } from './collections/Pedidos'
 import { Productos } from './collections/Productos'
 import { Tipos } from './collections/Tipos'
 import { Users } from './collections/Users'
@@ -43,7 +45,7 @@ export default buildConfig({
     supportedLanguages: { es },
     fallbackLanguage: 'es',
   },
-  collections: [Productos, Colecciones, Tipos, Media, Users],
+  collections: [Productos, Colecciones, Tipos, Inventario, Pedidos, Media, Users],
   globals: [Portada, Ajustes],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',

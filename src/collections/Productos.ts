@@ -123,7 +123,6 @@ export const Productos: CollectionConfig = {
               required: true,
               options: TALLAS.map((t) => ({ label: t, value: t })),
             },
-            { name: 'stock', type: 'number', required: true, min: 0, defaultValue: 0 },
             { name: 'sku', label: 'SKU', type: 'text' },
           ],
         },

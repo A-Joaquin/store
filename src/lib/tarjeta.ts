@@ -35,7 +35,8 @@ const aFoto = (m: Media): FotoTarjeta => ({
   blur: m.blurDataURL ?? null,
 })
 
-export function aTarjeta(p: Producto): PrendaTarjeta {
+// stock: disponible por "<productoId>:<talla>" (colección Inventario).
+export function aTarjeta(p: Producto, stock: Map<string, number> = new Map()): PrendaTarjeta {
   return {
     slug: p.slug,
     nombre: p.nombre,
@@ -44,7 +45,7 @@ export function aTarjeta(p: Producto): PrendaTarjeta {
     color: p.color,
     descripcion: p.descripcion,
     coleccion: typeof p.coleccion === 'object' ? (p.coleccion?.nombre ?? null) : null,
-    tallas: (p.tallas ?? []).map((t) => ({ talla: t.talla, stock: t.stock })),
+    tallas: (p.tallas ?? []).map((t) => ({ talla: t.talla, stock: stock.get(`${p.id}:${t.talla}`) ?? 0 })),
     fotos: p.galeria.map(comoMedia).flatMap((m) => (m ? [aFoto(m)] : [])),
   }
 }

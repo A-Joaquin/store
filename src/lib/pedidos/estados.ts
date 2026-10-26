@@ -1,0 +1,32 @@
+// Estados del pedido (fase 1: pago y coordinación por WhatsApp).
+export const ESTADOS = [
+  { valor: 'pendiente', etiqueta: 'Pendiente', cliente: 'Recibido: te escribiremos por WhatsApp para coordinar el pago.' },
+  { valor: 'confirmado', etiqueta: 'Confirmado (pagado)', cliente: 'Pago confirmado.' },
+  { valor: 'preparando', etiqueta: 'Preparando', cliente: 'Estamos preparando tu pedido.' },
+  { valor: 'enviado', etiqueta: 'Enviado / listo para recoger', cliente: 'En camino (o listo para recoger).' },
+  { valor: 'entregado', etiqueta: 'Entregado', cliente: 'Entregado. ¡Gracias por tu compra!' },
+  { valor: 'cancelado', etiqueta: 'Cancelado', cliente: 'Pedido cancelado.' },
+] as const
+
+export type EstadoPedido = (typeof ESTADOS)[number]['valor']
+
+// Estados que cuentan como venta realizada.
+export const ESTADOS_VENTA: EstadoPedido[] = ['confirmado', 'preparando', 'enviado', 'entregado']
+
+export const etiquetaEstado = (e: string) => ESTADOS.find((x) => x.valor === e)?.etiqueta ?? e
+
+export const CIUDADES = [
+  'La Paz',
+  'El Alto',
+  'Cochabamba',
+  'Santa Cruz',
+  'Oruro',
+  'Potosí',
+  'Sucre',
+  'Tarija',
+  'Trinidad',
+  'Cobija',
+] as const
+
+// Horas que el stock queda reservado mientras se coordina el pago.
+export const HORAS_RESERVA = 48

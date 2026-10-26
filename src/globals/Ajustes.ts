@@ -1,5 +1,6 @@
 import type { GlobalConfig } from 'payload'
 
+import { CIUDADES } from '@/lib/pedidos/estados'
 import { revalidarTodo } from '@/lib/revalidar'
 import { CUIDADO, ORIGEN } from '@/lib/textos'
 
@@ -27,6 +28,49 @@ export const Ajustes: GlobalConfig = {
       admin: { description: 'Con código de país y sin espacios. Ej.: 59170000000' },
     },
     { name: 'email', type: 'email' },
+    {
+      name: 'envios',
+      label: 'Envíos',
+      type: 'group',
+      fields: [
+        {
+          type: 'row',
+          fields: [
+            {
+              name: 'costoLocal',
+              label: 'Envío local (Bs)',
+              type: 'number',
+              defaultValue: 15,
+              min: 0,
+              admin: { description: 'Ciudades de abajo.' },
+            },
+            { name: 'costoNacional', label: 'Envío al resto del país (Bs)', type: 'number', defaultValue: 35, min: 0 },
+            {
+              name: 'gratisDesde',
+              label: 'Envío gratis desde (Bs)',
+              type: 'number',
+              defaultValue: 0,
+              min: 0,
+              admin: { description: '0 = nunca gratis.' },
+            },
+          ],
+        },
+        {
+          name: 'ciudadesLocales',
+          label: 'Ciudades con envío local',
+          type: 'select',
+          hasMany: true,
+          defaultValue: ['La Paz', 'El Alto'],
+          options: CIUDADES.map((c) => ({ label: c, value: c })),
+        },
+        {
+          name: 'recojo',
+          label: 'Dirección de recojo',
+          type: 'text',
+          admin: { description: 'Si queda vacío, no se ofrece el recojo en tienda.' },
+        },
+      ],
+    },
     {
       name: 'ficha',
       label: 'Textos de la ficha de producto',

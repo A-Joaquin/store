@@ -9,7 +9,7 @@ import s from '@/components/ficha/Ficha.module.css'
 import { Imagen } from '@/components/Imagen'
 import { JsonLd } from '@/components/JsonLd'
 import { MigasDatos, type Miga } from '@/components/Migas'
-import { cliente, getAjustes, getProducto, getProductos } from '@/lib/datos'
+import { cliente, getAjustes, getProducto, getProductos, getStock } from '@/lib/datos'
 import { precioBs } from '@/lib/formato'
 import { absoluta, comoMedia, srcPrincipal, urlCompartir } from '@/lib/imagen'
 import { MARCA, SITE_URL, rutaColeccion, rutaProducto } from '@/lib/sitio'
@@ -75,6 +75,8 @@ export default async function FichaProducto({ params }: Props) {
         : []
 
   const ajustes = await getAjustes()
+  const stock = await getStock([producto.id, ...relacionados.map((p) => p.id)])
+  const stockDe = (talla: string) => stock.get(`${producto.id}:${talla}`) ?? 0
 
   const migas: Miga[] = [
     ...(coleccion ? [{ nombre: coleccion.nombre, ruta: rutaColeccion(coleccion.slug) }] : []),
@@ -114,7 +116,7 @@ export default async function FichaProducto({ params }: Props) {
             size: t.talla,
             color: producto.color,
             image: imagenesLd[0],
-            offers: oferta(t.stock, `${url}?talla=${encodeURIComponent(t.talla)}`),
+            offers: oferta(stockDe(t.talla), `${url}?talla=${encodeURIComponent(t.talla)}`),
           })),
         }
       : {
@@ -167,7 +169,7 @@ export default async function FichaProducto({ params }: Props) {
               precio={producto.precio}
               imagen={primeraFoto ? srcPrincipal(primeraFoto) : null}
               color={producto.color}
-              tallas={tallas.map((t) => ({ talla: t.talla, stock: t.stock }))}
+              tallas={tallas.map((t) => ({ talla: t.talla, stock: stockDe(t.talla) }))}
             />
 
             <AcordeonesFicha producto={producto} tipo={tipo} coleccion={coleccion} ajustes={ajustes} />
@@ -191,7 +193,7 @@ export default async function FichaProducto({ params }: Props) {
           <div className={s.relacionadosLista}>
             {relacionados.slice(0, 4).map((p) => (
               <div key={p.id} className={s.relacionadosItem}>
-                <Tarjeta prenda={aTarjeta(p)} sizes="(max-width: 812px) 50vw, 25vw" />
+                <Tarjeta prenda={aTarjeta(p, stock)} sizes="(max-width: 812px) 50vw, 25vw" />
               </div>
             ))}
           </div>

@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 import { BloqueColeccion } from '@/components/catalogo/BloqueColeccion'
 import { JsonLd } from '@/components/JsonLd'
 import { Migas } from '@/components/Migas'
-import { getColeccion, getColecciones, getProductos } from '@/lib/datos'
+import { getColeccion, getColecciones, getProductos, getStock } from '@/lib/datos'
 import { comoMedia, urlCompartir } from '@/lib/imagen'
 import { SITE_URL, rutaColeccion, rutaProducto } from '@/lib/sitio'
 import { aTarjeta } from '@/lib/tarjeta'
@@ -41,13 +41,14 @@ export default async function PaginaColeccion({ params }: Props) {
   if (!coleccion) notFound()
 
   const productos = await getProductos({ coleccion: coleccion.id })
+  const stock = await getStock(productos.map((p) => p.id))
 
   return (
     <div className={s.pagina}>
       <div className={s.migas}>
         <Migas items={[{ nombre: coleccion.nombre, ruta: rutaColeccion(coleccion.slug) }]} />
       </div>
-      <BloqueColeccion titulo={coleccion.nombre} prendas={productos.map(aTarjeta)} tituloComoH1 prioridad={3} />
+      <BloqueColeccion titulo={coleccion.nombre} prendas={productos.map((p) => aTarjeta(p, stock))} tituloComoH1 prioridad={3} />
       {coleccion.descripcion && <p className={s.intro}>{coleccion.descripcion}</p>}
 
       <JsonLd
