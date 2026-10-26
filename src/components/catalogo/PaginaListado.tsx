@@ -5,6 +5,7 @@ import type { Listado } from '@/lib/listados'
 import { SITE_URL, rutaPagina, rutaProducto } from '@/lib/sitio'
 
 import { BloqueColeccion } from './BloqueColeccion'
+import { OtrasColecciones } from './OtrasColecciones'
 import { Paginacion } from './Paginacion'
 
 // Página de colección o de categoría (cualquier número de página): mismo
@@ -24,6 +25,7 @@ export function PaginaListado({ listado }: { listado: Listado }) {
       <BloqueColeccion titulo={titulo} prendas={prendas} total={total} tituloComoH1 prioridad={3} />
       <Paginacion base={base} pagina={pagina} total={totalPaginas} />
       {descripcion && pagina === 1 && <p className={s.intro}>{descripcion}</p>}
+      {listado.tipo === 'coleccion' && <OtrasColecciones actual={listado.slug} />}
 
       <JsonLd
         datos={{

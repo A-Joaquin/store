@@ -1,0 +1,138 @@
+/* "OTRAS COLECCIONES": mismo lenguaje que "TAMBIÉN TE PUEDE GUSTAR" de la
+   ficha (título Pirata centrado, tarjetas 2:3 sobre fondo hueso). */
+.otras {
+  margin: 110px 0;
+}
+.otras h2 {
+  font-family: var(--display);
+  font-size: 40px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0.03em;
+  text-align: center;
+}
+.lista {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: 60px 55px 0;
+}
+.item {
+  display: block;
+  width: calc(25% - 24px);
+  margin: 41px 12px;
+  text-align: center;
+}
+.foto {
+  position: relative;
+  display: block;
+  padding-top: 150%;
+  overflow: hidden;
+  background: #f2f0ea;
+}
+.foto img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  background-size: cover;
+  transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.item:hover .foto img {
+  transform: scale(1.06);
+}
+.nombre {
+  display: block;
+  margin-top: 14px;
+  font-family: var(--display);
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: 0.03em;
+  color: var(--ink);
+}
+.cantidad {
+  display: block;
+  margin-top: 6px;
+  font-size: 11px;
+  line-height: 1.2;
+  letter-spacing: 0.2em;
+  color: #888;
+}
+/* "VER COLECCIÓN →" con el subrayado que se dibuja al pasar el mouse. */
+.ver {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  margin-top: 14px;
+  padding-bottom: 4px;
+  font-size: 12px;
+  line-height: 1.2;
+}
+.ver::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: #000;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.5s;
+}
+.item:hover .ver::before {
+  transform: scaleX(1);
+}
+.flecha {
+  position: relative;
+  width: 12px;
+  height: 10px;
+  margin-left: 10px;
+  transition: transform 0.3s;
+}
+.flecha::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 2px;
+  width: 10px;
+  height: 1px;
+  background: #000;
+}
+.flecha::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 1px;
+  width: 5px;
+  height: 5px;
+  margin-top: -3px;
+  border-top: 1px solid #000;
+  border-right: 1px solid #000;
+  transform: rotate(45deg);
+}
+.item:hover .flecha {
+  transform: translateX(5px);
+}
+
+@media (max-width: 812px) {
+  .otras {
+    margin: 70px 0;
+  }
+  .otras h2 {
+    font-size: 30px;
+  }
+  .lista {
+    margin: 30px 5px 0;
+  }
+  .item {
+    width: calc(50% - 10px);
+    margin: 15px 5px;
+  }
+  .nombre {
+    font-size: 20px;
+  }
+}

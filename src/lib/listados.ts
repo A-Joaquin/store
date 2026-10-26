@@ -15,6 +15,8 @@ export const EN_PORTADA = 8
 export type TipoListado = 'coleccion' | 'categoria'
 
 export type Listado = {
+  tipo: TipoListado
+  slug: string
   titulo: string
   descripcion: string | null
   base: string
@@ -53,7 +55,7 @@ export const cargarListado = cache(async (tipo: TipoListado, slug: string, pagin
     if (!c) return null
     const r = await prendasPaginadas({ coleccion: c.id }, pagina)
     if (pagina > r.totalPaginas) return null
-    return { titulo: c.nombre, descripcion: c.descripcion ?? null, base: rutaColeccion(c.slug), pagina, ...r, meta: c.meta, imagen: c.imagen }
+    return { tipo, slug: c.slug, titulo: c.nombre, descripcion: c.descripcion ?? null, base: rutaColeccion(c.slug), pagina, ...r, meta: c.meta, imagen: c.imagen }
   }
   const { docs } = await payload.find({ collection: 'tipos', where: { slug: { equals: slug } }, limit: 1, overrideAccess: false })
   const t = docs[0]
@@ -61,7 +63,7 @@ export const cargarListado = cache(async (tipo: TipoListado, slug: string, pagin
   const r = await prendasPaginadas({ tipo: t.id }, pagina)
   if (pagina > r.totalPaginas) return null
   const titulo = t.categoria ? t.categoria.charAt(0) + t.categoria.slice(1).toLowerCase() : t.nombre
-  return { titulo, descripcion: t.descripcion ?? null, base: rutaCategoria(t.slug), pagina, ...r, meta: t.meta, imagen: null }
+  return { tipo, slug: t.slug, titulo, descripcion: t.descripcion ?? null, base: rutaCategoria(t.slug), pagina, ...r, meta: t.meta, imagen: null }
 })
 
 export function metadataListado(l: Listado): Metadata {

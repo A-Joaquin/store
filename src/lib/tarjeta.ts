@@ -25,7 +25,7 @@ export type PrendaTarjeta = {
   fotos: FotoTarjeta[]
 }
 
-const aFoto = (m: Media): FotoTarjeta => ({
+export const aFoto = (m: Media): FotoTarjeta => ({
   src: srcPrincipal(m),
   srcSet: srcSet(m),
   grande: m.sizes?.w1600?.url || m.sizes?.w1200?.url || srcPrincipal(m),
