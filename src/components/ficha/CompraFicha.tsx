@@ -75,6 +75,7 @@ export function CompraFicha({ slug, nombre, precio, imagen, color, tallas }: Pro
       >
         <span>{agotado ? 'AGOTADO' : 'AGREGAR A LA BOLSA'}</span>
       </button>
+      <BotonFavorito slug={slug} nombre={nombre} variante="boton" />
       <p className={s.agregado} aria-live="polite">
         {aviso}
       </p>
@@ -87,7 +88,6 @@ export function CompraFicha({ slug, nombre, precio, imagen, color, tallas }: Pro
         <Regla />
         <span>Guía de tallas</span>
       </button>
-      <BotonFavorito slug={slug} nombre={nombre} variante="texto" className={s.favorito} />
     </>
   )
 }

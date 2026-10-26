@@ -6,8 +6,9 @@ import { useFavoritos } from './Favoritos'
 type Props = {
   slug: string
   nombre: string
-  // "icono": corazón solo (tarjetas). "texto": corazón + texto (ficha, vista rápida).
-  variante?: 'icono' | 'texto'
+  // "icono": corazón solo (tarjetas). "texto": corazón + texto (vista rápida).
+  // "boton": botón con borde bajo "Agregar a la bolsa" (ficha).
+  variante?: 'icono' | 'texto' | 'boton'
   className?: string
 }
 
@@ -29,7 +30,7 @@ export function BotonFavorito({ slug, nombre, variante = 'icono', className }: P
   return (
     <button
       type="button"
-      className={`${variante === 'icono' ? s.icono : s.texto} ${activo ? s.activo : ''} ${className ?? ''}`}
+      className={`${s[variante]} ${activo ? s.activo : ''} ${className ?? ''}`}
       aria-pressed={activo}
       aria-label={activo ? `Quitar ${nombre} de favoritos` : `Agregar ${nombre} a favoritos`}
       onClick={(e) => {
@@ -39,8 +40,19 @@ export function BotonFavorito({ slug, nombre, variante = 'icono', className }: P
         favoritos.alternar(slug)
       }}
     >
-      <Corazon lleno={activo} />
-      {variante === 'texto' && <span>{activo ? 'En favoritos' : 'Agregar a favoritos'}</span>}
+      {variante === 'boton' ? (
+        <span className={s.contenido}>
+          <span className={s.chispas} aria-hidden="true">
+            <Corazon lleno={activo} />
+          </span>
+          <span>{activo ? 'EN TUS FAVORITOS' : 'AGREGAR A FAVORITOS'}</span>
+        </span>
+      ) : (
+        <>
+          <Corazon lleno={activo} />
+          {variante === 'texto' && <span>{activo ? 'En favoritos' : 'Agregar a favoritos'}</span>}
+        </>
+      )}
     </button>
   )
 }

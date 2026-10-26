@@ -84,7 +84,120 @@
   transform: scaleX(0);
 }
 
+/* Ficha: botón con borde del ancho de "Agregar a la bolsa". Al pasar el
+   mouse entra un relleno negro desde la izquierda; marcado queda negro con
+   el corazón en hielo, y al marcarlo late y suelta destellos. */
+.boton {
+  position: relative;
+  display: block;
+  width: 260px;
+  margin-top: 10px;
+  padding: 18px 0;
+  overflow: hidden;
+  border: 1px solid #000;
+  background: #fff;
+  color: #000;
+  font-size: 12px;
+  line-height: 1.15;
+  letter-spacing: 1.2px;
+  cursor: var(--cursor-enlace);
+  transition: color 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.boton::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #000;
+  transform: scaleX(0);
+  transform-origin: right center;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.boton:hover::before,
+.boton.activo::before {
+  transform: scaleX(1);
+  transform-origin: left center;
+}
+.boton:hover,
+.boton.activo {
+  color: #fff;
+}
+.contenido {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.boton .corazon {
+  width: 17px;
+  height: 17px;
+}
+.boton:hover .corazon {
+  transform: scale(1.15);
+}
+.boton.activo .corazon {
+  color: var(--ice);
+}
+.chispas {
+  position: relative;
+  display: block;
+}
+/* Ocho destellos en círculo alrededor del corazón (solo al marcar). */
+.chispas::before,
+.chispas::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 4px;
+  height: 4px;
+  margin: -2px 0 0 -2px;
+  border-radius: 50%;
+  opacity: 0;
+  box-shadow:
+    0 -15px var(--ice),
+    15px 0 var(--ice),
+    0 15px var(--ice),
+    -15px 0 var(--ice);
+}
+.chispas::after {
+  transform: rotate(45deg);
+  box-shadow:
+    0 -13px #fff,
+    13px 0 #fff,
+    0 13px #fff,
+    -13px 0 #fff;
+}
+.boton.activo .chispas::before {
+  animation: destello 0.7s ease-out;
+}
+.boton.activo .chispas::after {
+  animation: destelloGirado 0.7s ease-out;
+}
+@keyframes destello {
+  0% {
+    opacity: 1;
+    transform: scale(0.3);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.3);
+  }
+}
+@keyframes destelloGirado {
+  0% {
+    opacity: 1;
+    transform: rotate(45deg) scale(0.3);
+  }
+  100% {
+    opacity: 0;
+    transform: rotate(45deg) scale(1.3);
+  }
+}
+
 @media (max-width: 812px) {
+  .boton {
+    width: 100%;
+  }
   /* En el celular no hay hover: el corazón siempre visible. */
   .icono {
     top: 8px;
@@ -101,7 +214,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .activo .corazon {
+  .activo .corazon,
+  .boton.activo .chispas::before,
+  .boton.activo .chispas::after {
     animation: none;
   }
 }
