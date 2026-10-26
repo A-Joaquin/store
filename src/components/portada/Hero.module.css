@@ -1,0 +1,235 @@
+/* Hero de la portada: pantalla completa, slider con transición deformada,
+   contador, flechas, barra de progreso y aviso de newsletter. */
+.hero {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+  background: #000;
+}
+.fotos {
+  position: absolute;
+  inset: 0;
+  cursor: pointer;
+}
+/* Primera foto como imagen normal (carga rápida y SEO). El canvas aparece
+   encima con un fundido cuando WebGL está listo. */
+.fotos picture,
+.fotos img,
+.canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+}
+.canvas {
+  opacity: 0;
+  transition: opacity 2s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+.canvasListo {
+  opacity: 1;
+}
+/* Respaldo sin WebGL: fundido simple entre fotos apiladas. */
+.respaldo {
+  opacity: 0;
+  transition: opacity 1s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+.respaldoActivo {
+  opacity: 1;
+}
+
+/* --- Controles (solo escritorio) --------------------------------------- */
+.herramientas {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  z-index: 1000;
+  width: 0;
+  height: 40px;
+}
+.barra {
+  position: absolute;
+  left: -160px;
+  bottom: 34px;
+  width: 180px;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.3);
+}
+.barraRelleno {
+  width: 100%;
+  height: 100%;
+  background: var(--ice);
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+.barraCorriendo {
+  animation: progreso 4.5s linear 0.3s forwards;
+}
+@keyframes progreso {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.contador {
+  position: absolute;
+  left: 45px;
+  bottom: 28px;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  line-height: 1.2;
+  letter-spacing: 1.4px;
+}
+.contadorVentana {
+  width: 25px;
+  height: 12px;
+  margin-bottom: 4px;
+  overflow: hidden;
+  text-align: center;
+}
+.contadorLista {
+  display: flex;
+  flex-direction: column;
+  transition: transform 1s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+.contadorLista span {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 12px;
+}
+.contadorBarra {
+  padding-right: 5px;
+}
+
+.flecha {
+  position: absolute;
+  bottom: 20px;
+  width: 35px;
+  height: 30px;
+  padding: 10px;
+  border: 0;
+  background: none;
+  color: #000;
+  cursor: pointer;
+}
+.anterior {
+  left: 118px;
+}
+.siguiente {
+  left: 153px;
+}
+/* Flecha dibujada: línea de 10 px + punta de 5 px. */
+.flecha span {
+  position: relative;
+  display: block;
+  width: 15px;
+  height: 10px;
+}
+.flecha span::before {
+  content: '';
+  position: absolute;
+  top: 4.5px;
+  right: 5px;
+  width: 10px;
+  height: 1px;
+  background: currentColor;
+}
+.flecha span::after {
+  content: '';
+  position: absolute;
+  top: 2.5px;
+  width: 5px;
+  height: 5px;
+  border-top: 1px solid currentColor;
+}
+.siguiente span::after {
+  left: 6px;
+  border-right: 1px solid currentColor;
+  transform: rotate(45deg);
+}
+.anterior span::before {
+  right: 0;
+}
+.anterior span::after {
+  left: 1px;
+  border-left: 1px solid currentColor;
+  transform: rotate(-45deg);
+}
+
+/* --- Aviso de newsletter ------------------------------------------------- */
+.news {
+  position: absolute;
+  left: 20px;
+  bottom: 21px;
+  z-index: 1001;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 219px;
+  height: 44px;
+  background: #fff;
+}
+.news form {
+  display: flex;
+  gap: 1px;
+}
+.news input {
+  width: 145px;
+  height: 20px;
+  padding: 1px 2px 4px;
+  border: 0;
+  border-bottom: 1px solid #000;
+  border-radius: 0;
+  outline: none;
+  background: none;
+  font-size: 12px;
+  line-height: 1.15;
+}
+.news button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 49px;
+  height: 20px;
+  padding: 3px 6px 1px;
+  border: 0;
+  background: #000;
+  color: #fff;
+  font-size: 12px;
+  line-height: 1.15;
+  cursor: pointer;
+}
+.newsGracias {
+  font-size: 12px;
+  letter-spacing: 1.2px;
+}
+
+@media (max-width: 812px) {
+  .hero {
+    height: 100svh;
+  }
+  /* En móvil no hay controles a la vista, pero la barra sigue corriendo
+     (oculta) para el avance automático. */
+  .herramientas {
+    visibility: hidden;
+  }
+  .news {
+    left: 10px;
+    bottom: 10px;
+    width: 194px;
+  }
+  .news input {
+    width: 124px;
+    height: 23px;
+  }
+  .news button {
+    height: 23px;
+  }
+}

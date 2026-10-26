@@ -112,19 +112,19 @@ textarea {
 
 /* ===== Provisional: páginas aún no migradas al diseño final =====
    Se borra cada bloque al migrar su página (MIGRACION.md, fase 1). */
-main {
+.provisional {
   padding: 140px var(--gutter) 64px;
   font-size: 13px;
   line-height: 1.5;
 }
-main h1,
-main h2 {
+.provisional h1,
+.provisional h2 {
   font-family: var(--display);
 }
-main h1 {
+.provisional h1 {
   font-size: clamp(38px, 4vw, 56px);
 }
-main h2 {
+.provisional h2 {
   font-size: 32px;
 }
 

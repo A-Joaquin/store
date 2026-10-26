@@ -61,7 +61,7 @@ export function ImagenHero({ escritorio, movil, prioridad, className }: HeroProp
   const m = comoMedia(movil)
   return (
     <picture>
-      {m && <source media="(max-width: 767px)" srcSet={srcSet(m)} sizes="100vw" />}
+      {m && <source media="(max-width: 812px)" srcSet={srcSet(m)} sizes="100vw" />}
       <Imagen
         media={escritorio}
         sizes="100vw"

@@ -1,0 +1,30 @@
+/* Página de colección: el bloque de la portada debajo del header, con las
+   migas arriba y el texto introductorio (SEO) al final. */
+.pagina {
+  padding-top: 117px;
+}
+.migas {
+  padding: 30px 60px 0 90px;
+}
+.intro {
+  max-width: 70ch;
+  margin: 0 auto;
+  padding: 20px 60px 80px;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.8;
+  letter-spacing: 0.04em;
+  color: var(--steel);
+}
+
+@media (max-width: 812px) {
+  .pagina {
+    padding-top: 59px;
+  }
+  .migas {
+    padding: 20px 25px 0;
+  }
+  .intro {
+    padding: 10px 25px 60px;
+  }
+}

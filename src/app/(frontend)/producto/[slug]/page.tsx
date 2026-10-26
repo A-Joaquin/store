@@ -6,11 +6,12 @@ import { Imagen } from '@/components/Imagen'
 import { JsonLd } from '@/components/JsonLd'
 import { Migas, type Miga } from '@/components/Migas'
 import { PedirWhatsApp } from '@/components/PedirWhatsApp'
-import { TarjetaProducto } from '@/components/TarjetaProducto'
+import { Tarjeta } from '@/components/catalogo/Tarjeta'
 import { cliente, getAjustes, getProducto, getProductos } from '@/lib/datos'
 import { precioBs } from '@/lib/formato'
 import { absoluta, comoMedia, srcPrincipal, urlCompartir } from '@/lib/imagen'
 import { MARCA, SITE_URL, rutaColeccion, rutaProducto } from '@/lib/sitio'
+import { aTarjeta } from '@/lib/tarjeta'
 import type { Coleccion, Producto } from '@/payload-types'
 
 type Props = { params: Promise<{ slug: string }> }
@@ -123,7 +124,7 @@ export default async function FichaProducto({ params }: Props) {
         }
 
   return (
-    <article className="ficha">
+    <article className="ficha provisional">
       <Migas items={migas} />
 
       <div className="ficha__galeria">
@@ -165,7 +166,7 @@ export default async function FichaProducto({ params }: Props) {
           <h2 id="titulo-relacionados">Completa el look</h2>
           <div className="grilla">
             {relacionados.map((p) => (
-              <TarjetaProducto key={p.id} producto={p} />
+              <Tarjeta key={p.id} prenda={aTarjeta(p)} />
             ))}
           </div>
         </section>

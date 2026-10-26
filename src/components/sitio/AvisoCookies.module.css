@@ -1,0 +1,68 @@
+.aviso {
+  display: none;
+}
+
+@media (max-width: 812px) {
+  .aviso {
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    z-index: 1000;
+    display: block;
+    width: 148px;
+    background: #000;
+    color: #fff;
+  }
+  .aviso p {
+    padding: 15px;
+    font-size: 11px;
+    line-height: 1.2;
+    letter-spacing: 1.1px;
+  }
+}
+
+.enlace {
+  position: relative;
+}
+.enlace::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 13px;
+  height: 1px;
+  background: #fff;
+  transition: transform 0.5s;
+}
+.enlace:hover::before {
+  transform: scaleX(0);
+}
+
+/* X de 11,5 px con trazos de 2 px. */
+.cerrar {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  width: 16px;
+  height: 16px;
+  margin-top: -8px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.cerrar::before,
+.cerrar::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 2px;
+  width: 12px;
+  height: 2px;
+  margin-top: -1px;
+  background: #fff;
+  transform: rotate(45deg);
+}
+.cerrar::after {
+  transform: rotate(-45deg);
+}

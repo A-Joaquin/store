@@ -1,0 +1,120 @@
+/* Bloque de colección: el título es una celda más de la grilla (ancho de dos
+   prendas) y las prendas fluyen a su lado, 5 columnas en escritorio. */
+.bloque {
+  position: relative;
+  padding: 60px 60px 40px;
+}
+.lista {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -5px;
+}
+.cabeza {
+  width: calc(40% - 24px);
+  margin: 39px 12px;
+  padding: 50px 0 0 30px;
+}
+.titulo {
+  margin-top: 40px;
+  font-family: var(--display);
+  font-size: clamp(48px, 4.6vw, 76px);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: var(--ink);
+}
+.cantidad {
+  margin-top: 16px;
+  font-size: 11px;
+  line-height: 1.2;
+  letter-spacing: 0.2em;
+  color: #888;
+}
+.item {
+  width: calc(20% - 24px);
+  margin: 41px 12px;
+}
+
+/* "VER TODO →": el subrayado se dibuja al entrar en pantalla. */
+.verTodo {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 22px;
+}
+.verTodo a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding-bottom: 5px;
+  font-size: 12px;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.verTodo a::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: #000;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.5s;
+}
+.verTodoVisible a::before {
+  transform: scaleX(1);
+}
+.flecha {
+  position: relative;
+  width: 12px;
+  height: 10px;
+  margin-left: 10px;
+  transition: transform 0.3s;
+}
+.flecha::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 2px;
+  width: 10px;
+  height: 1px;
+  background: #000;
+}
+.flecha::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  right: 1px;
+  width: 5px;
+  height: 5px;
+  margin-top: -3px;
+  border-top: 1px solid #000;
+  border-right: 1px solid #000;
+  transform: rotate(45deg);
+}
+.verTodo a:hover .flecha {
+  transform: translateX(5px);
+}
+
+@media (max-width: 812px) {
+  .bloque {
+    padding: 30px 10px;
+  }
+  .cabeza {
+    width: calc(100% - 10px);
+    margin: 0 5px 10px;
+    padding: 0 0 0 15px;
+  }
+  .titulo {
+    margin-top: 20px;
+    font-size: 40px;
+  }
+  .cantidad {
+    margin-top: 8px;
+  }
+  .item {
+    width: calc(50% - 10px);
+    margin: 15px 5px;
+  }
+}

@@ -1,12 +1,15 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
+import { BloqueColeccion } from '@/components/catalogo/BloqueColeccion'
 import { JsonLd } from '@/components/JsonLd'
 import { Migas } from '@/components/Migas'
-import { TarjetaProducto } from '@/components/TarjetaProducto'
 import { getColeccion, getColecciones, getProductos } from '@/lib/datos'
 import { comoMedia, urlCompartir } from '@/lib/imagen'
 import { SITE_URL, rutaColeccion, rutaProducto } from '@/lib/sitio'
+import { aTarjeta } from '@/lib/tarjeta'
+
+import s from './coleccion.module.css'
 
 type Props = { params: Promise<{ slug: string }> }
 
@@ -32,6 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 }
 
+// Mismo diseño que los bloques de colección de la portada.
 export default async function PaginaColeccion({ params }: Props) {
   const coleccion = await getColeccion((await params).slug)
   if (!coleccion) notFound()
@@ -39,18 +43,12 @@ export default async function PaginaColeccion({ params }: Props) {
   const productos = await getProductos({ coleccion: coleccion.id })
 
   return (
-    <>
-      <Migas items={[{ nombre: coleccion.nombre, ruta: rutaColeccion(coleccion.slug) }]} />
-      <header className="encabezado-coleccion">
-        <h1>{coleccion.nombre}</h1>
-        {coleccion.descripcion && <p>{coleccion.descripcion}</p>}
-      </header>
-
-      <div className="grilla">
-        {productos.map((p, i) => (
-          <TarjetaProducto key={p.id} producto={p} prioridad={i < 2} />
-        ))}
+    <div className={s.pagina}>
+      <div className={s.migas}>
+        <Migas items={[{ nombre: coleccion.nombre, ruta: rutaColeccion(coleccion.slug) }]} />
       </div>
+      <BloqueColeccion titulo={coleccion.nombre} prendas={productos.map(aTarjeta)} tituloComoH1 prioridad={3} />
+      {coleccion.descripcion && <p className={s.intro}>{coleccion.descripcion}</p>}
 
       <JsonLd
         datos={{
@@ -64,6 +62,6 @@ export default async function PaginaColeccion({ params }: Props) {
           })),
         }}
       />
-    </>
+    </div>
   )
 }

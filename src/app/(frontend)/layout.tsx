@@ -4,7 +4,9 @@ import React from 'react'
 
 import { CajonCarrito } from '@/components/carrito/CajonCarrito'
 import { CarritoProvider } from '@/components/carrito/Carrito'
+import { VistaRapidaProvider } from '@/components/catalogo/VistaRapida'
 import { JsonLd } from '@/components/JsonLd'
+import { AvisoCookies } from '@/components/sitio/AvisoCookies'
 import { BarraLateral } from '@/components/sitio/BarraLateral'
 import { Cabecera } from '@/components/sitio/Cabecera'
 import { MenuMovil, MenuMovilProvider } from '@/components/sitio/MenuMovil'
@@ -69,17 +71,20 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body>
         <CarritoProvider>
           <MenuMovilProvider>
-            <a href="#contenido" className="saltar">
-              Ir al contenido
-            </a>
-            <Cabecera colecciones={listaColecciones} prendas={prendas} destacada={destacada} redes={redes} />
-            <BarraLateral />
-            <MenuMovil colecciones={listaColecciones} prendas={prendas} redes={redes} />
-            <CajonCarrito whatsapp={whatsapp} />
+            <VistaRapidaProvider>
+              <a href="#contenido" className="saltar">
+                Ir al contenido
+              </a>
+              <Cabecera colecciones={listaColecciones} prendas={prendas} destacada={destacada} redes={redes} />
+              <BarraLateral />
+              <MenuMovil colecciones={listaColecciones} prendas={prendas} redes={redes} />
+              <CajonCarrito whatsapp={whatsapp} />
 
-            <main id="contenido">{children}</main>
+              <main id="contenido">{children}</main>
 
-            <Pie redes={redes} />
+              <Pie redes={redes} />
+              <AvisoCookies />
+            </VistaRapidaProvider>
           </MenuMovilProvider>
         </CarritoProvider>
 

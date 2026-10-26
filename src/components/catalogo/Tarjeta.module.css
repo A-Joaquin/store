@@ -1,0 +1,187 @@
+/* Tarjeta de prenda: foto 2:3 con mini slider, botón de vista rápida y
+   nombre + precio debajo. */
+.tarjeta {
+  position: relative;
+}
+.figura {
+  position: relative;
+  margin: 0;
+}
+.foto {
+  position: relative;
+  display: block;
+  padding-top: 150%;
+  overflow: hidden;
+  background: #f2f0ea;
+}
+.pista {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  transition: transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.pista img {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  background-size: cover;
+}
+
+.nav {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 34px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s;
+}
+.nav::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  border-top: 1px solid var(--ink);
+  border-left: 1px solid var(--ink);
+}
+.anterior {
+  left: 0;
+}
+.anterior::before {
+  left: 14px;
+  transform: translateY(-50%) rotate(-45deg);
+}
+.siguiente {
+  right: 0;
+}
+.siguiente::before {
+  right: 14px;
+  transform: translateY(-50%) rotate(135deg);
+}
+.tarjeta:hover .nav {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Vista rápida: aparece como una ventana que se abre desde abajo y, al pasar
+   el mouse, el relleno negro sube con el mismo efecto. */
+.rapida {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  overflow: hidden;
+  border: none;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--ink);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  white-space: nowrap;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(10, 10, 11, 0.12);
+  clip-path: inset(100% 0 0 0 round 999px);
+  transform: translate(-50%, 6px);
+  transition:
+    clip-path 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.rapida::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--ink);
+  clip-path: inset(100% 0 0 0);
+  transition: clip-path 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.rapida svg {
+  position: relative;
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+}
+.rapida span {
+  position: relative;
+}
+.tarjeta:hover .rapida,
+.rapida:focus-visible {
+  clip-path: inset(0 0 0 0 round 999px);
+  transform: translate(-50%, 0);
+}
+.rapida:hover,
+.rapida:focus-visible {
+  color: #fff;
+}
+.rapida:hover::before,
+.rapida:focus-visible::before {
+  clip-path: inset(0 0 0 0);
+}
+
+.info {
+  display: block;
+  margin-top: 12px;
+  text-align: center;
+}
+.nombre {
+  font-family: var(--display);
+  font-size: 19px;
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: 0.03em;
+  color: var(--ink);
+}
+.precio {
+  margin-top: 5px;
+  font-size: 12px;
+  line-height: 1.2;
+  letter-spacing: 1.2px;
+  color: #888;
+  white-space: nowrap;
+}
+.precio s {
+  margin-right: 6px;
+}
+
+@media (max-width: 812px) {
+  .nav {
+    display: none;
+  }
+  .nombre {
+    font-size: 16px;
+  }
+  /* En móvil la vista rápida queda fija como ícono. */
+  .rapida,
+  .tarjeta:hover .rapida {
+    left: auto;
+    right: 8px;
+    bottom: 8px;
+    padding: 8px;
+    transform: none;
+    clip-path: inset(0 0 0 0 round 999px);
+  }
+  .rapida span {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rapida,
+  .rapida::before {
+    transition: none;
+  }
+}

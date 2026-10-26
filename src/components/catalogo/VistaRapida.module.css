@@ -1,0 +1,276 @@
+/* Vista rápida: el recuadro se abre como una ventana que sube desde abajo y
+   luego entra el contenido. */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 4000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 10px;
+}
+.fondo {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  animation: aparecer 0.4s both;
+}
+.ventana {
+  position: relative;
+  z-index: 4001;
+  display: flex;
+  gap: 40px;
+  align-items: flex-start;
+  width: 76.67vw;
+  max-width: 100%;
+  height: 92vh;
+  overflow: hidden;
+  background: #fff;
+  animation: ventana 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.contenido {
+  animation: contenido 0.7s 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes aparecer {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes ventana {
+  from {
+    clip-path: inset(100% 0 0 0);
+    transform: translateY(6vh);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    transform: translateY(0);
+  }
+}
+@keyframes contenido {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.cerrar {
+  position: absolute;
+  top: 45px;
+  right: 45px;
+  z-index: 4001;
+  width: 35px;
+  height: 35px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+}
+.cerrar::before,
+.cerrar::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 3px;
+  width: 29px;
+  height: 2px;
+  margin-top: -1px;
+  background: #000;
+  transform: rotate(45deg);
+}
+.cerrar::after {
+  transform: rotate(-45deg);
+}
+
+/* --- Galería --------------------------------------------------------------- */
+.galeria {
+  display: flex;
+  flex: 1 1 55%;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+.principal {
+  position: relative;
+  height: 56vh;
+  background: #f2f0ea;
+}
+.principal img {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: contain;
+}
+.miniaturas {
+  display: flex;
+  gap: 10px;
+}
+.miniatura {
+  width: 74px;
+  height: 92px;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid #ddd9d1;
+  background: #f2f0ea;
+  cursor: pointer;
+  opacity: 0.7;
+  transition:
+    border-color 0.2s,
+    opacity 0.2s;
+}
+.miniatura img {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+}
+.miniatura:hover {
+  opacity: 1;
+}
+.miniaturaActiva {
+  border-color: var(--ink);
+  opacity: 1;
+}
+
+/* --- Detalle --------------------------------------------------------------- */
+.lista {
+  display: flex;
+  flex: 1 1 45%;
+  align-items: flex-start;
+  padding: 30px 10px;
+}
+.detalle {
+  width: 100%;
+  margin: 100px 46px;
+  padding-bottom: 100px;
+  color: var(--ink);
+}
+.nombre {
+  margin: 0 0 10px;
+  font-family: var(--display);
+  font-size: clamp(30px, 3vw, 46px);
+  font-weight: 400;
+  line-height: 1.05;
+}
+.precio {
+  margin: 0 0 18px;
+  font-size: 18px;
+  letter-spacing: 0.04em;
+}
+.precio s {
+  margin-right: 8px;
+  color: var(--steel);
+}
+.desc {
+  max-width: 42ch;
+  margin: 0 0 20px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--steel);
+}
+.meta {
+  margin: 0 0 8px;
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--steel);
+}
+.meta strong {
+  font-weight: 600;
+  color: var(--ink);
+}
+.tallas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 26px;
+}
+.talla {
+  min-width: 44px;
+  padding: 10px 12px;
+  border: 1px solid #cfccc4;
+  background: transparent;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    border-color 0.2s;
+}
+.talla:hover {
+  border-color: var(--ink);
+}
+.tallaActiva {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #fff;
+}
+.talla:disabled {
+  opacity: 0.35;
+  text-decoration: line-through;
+  cursor: not-allowed;
+}
+.agregar {
+  display: inline-block;
+  width: 100%;
+  max-width: 320px;
+  padding: 16px 20px;
+  border: none;
+  background: var(--ink);
+  color: #fff;
+  font-size: 12px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.25s;
+}
+.agregar:hover {
+  background: var(--ice-dark);
+}
+.agregado {
+  min-height: 16px;
+  margin: 12px 0 0;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--ice-dark);
+}
+.ficha {
+  display: inline-block;
+  margin-top: 18px;
+  padding-bottom: 3px;
+  border-bottom: 1px solid currentColor;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--ink);
+}
+
+@media (max-width: 812px) {
+  .ventana {
+    width: calc(100% - 20px);
+    height: calc(100% - 20px);
+    padding: 0 50px 0 25px;
+  }
+  .cerrar {
+    top: 20px;
+    right: 20px;
+  }
+  /* Como en el sitio estático: en móvil la vista rápida no muestra fotos. */
+  .galeria {
+    display: none;
+  }
+  .detalle {
+    margin: 95px 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ventana,
+  .contenido,
+  .fondo {
+    animation: none;
+  }
+}
