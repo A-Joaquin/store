@@ -29,7 +29,13 @@ export function srcPrincipal(m: Media): string {
   return s?.w1200?.url || s?.w800?.url || s?.w400?.url || m.url || ''
 }
 
-export const absoluta = (url: string) => (url.startsWith('/') ? SITE_URL + url : url)
+// URL para leer los píxeles de una foto de R2 (textura WebGL, brillo del menú).
+// El <img> visible la pide sin CORS y R2 no responde con Vary: Origin, así que
+// con la misma URL el navegador reusaría esa copia y bloquearía la lectura.
+export const urlCors = (src: string) =>
+  src.startsWith('/') ? src : `${src}${src.includes('?') ? '&' : '?'}cors`
+
+export const absoluta =(url: string) => (url.startsWith('/') ? SITE_URL + url : url)
 
 // Imagen para Open Graph / JSON-LD: el recorte 1200×630 en JPEG si existe.
 export function urlCompartir(m: Media | null): string | undefined {

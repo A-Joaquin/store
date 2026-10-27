@@ -3,6 +3,8 @@
 import { useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
 
+import { urlCors } from '@/lib/imagen'
+
 import s from './Hero.module.css'
 import { HeroWebgl } from './heroWebgl'
 
@@ -17,12 +19,8 @@ type Props = {
 
 const MOVIL = '(max-width: 812px)'
 
-// Las fotos de R2 vienen de otro dominio: la textura necesita CORS, pero el
-// <img> visible no lo pide y el navegador reusaría esa copia sin CORS y la
-// rechazaría. Otra URL (?webgl) evita compartir la caché; así, si falla el
-// CORS, solo se pierde el efecto y la foto se sigue viendo.
-const conCors = (src: string) => (src.startsWith('/') ? src : `${src}${src.includes('?') ? '&' : '?'}webgl`)
-
+// La textura usa su propia URL con CORS: si el CORS falla, solo se pierde el
+// efecto y la foto visible se sigue viendo.
 const cargar = (src: string) =>
   new Promise<HTMLImageElement>((ok, mal) => {
     const img = new Image()
@@ -30,7 +28,7 @@ const cargar = (src: string) =>
     img.decoding = 'async'
     img.onload = () => ok(img)
     img.onerror = mal
-    img.src = conCors(src)
+    img.src = urlCors(src)
   })
 
 export function HeroSlider({ slides, children }: Props) {

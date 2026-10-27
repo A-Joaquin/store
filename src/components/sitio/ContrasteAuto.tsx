@@ -2,6 +2,8 @@
 
 import { useEffect } from 'react'
 
+import { urlCors } from '@/lib/imagen'
+
 // Header y barra lateral legibles sobre cualquier fondo: cada elemento con
 // [data-contraste] mide el brillo real de lo que tiene debajo y, si es
 // oscuro, recibe [data-oscuro] (el CSS lo pasa a blanco).
@@ -50,7 +52,7 @@ function grillaDe(src: string): Grilla | null {
     }
   }
   img.onerror = () => grillas.set(src, 'error')
-  img.src = src
+  img.src = urlCors(src)
   return null
 }
 
