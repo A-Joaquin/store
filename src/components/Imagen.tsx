@@ -14,15 +14,27 @@ type Props = {
   // Dentro de un <picture> con otra foto para móvil no se precarga: el
   // preload bajaría la de escritorio también en el teléfono.
   precargar?: boolean
+  // Para fotos que luego se leen con CORS (texturas WebGL del hero): si la
+  // primera descarga no fue CORS, el navegador reusa esa copia y la rechaza.
+  crossOrigin?: 'anonymous'
 }
 
-export function Imagen({ media, sizes, prioridad = false, className, alt, precargar = prioridad }: Props) {
+export function Imagen({
+  media,
+  sizes,
+  prioridad = false,
+  className,
+  alt,
+  precargar = prioridad,
+  crossOrigin,
+}: Props) {
   const m = comoMedia(media)
   if (!m) return null
 
   const set = srcSet(m) || undefined
   const src = srcPrincipal(m)
-  if (precargar) preload(src, { as: 'image', imageSrcSet: set, imageSizes: sizes, fetchPriority: 'high' })
+  if (precargar)
+    preload(src, { as: 'image', imageSrcSet: set, imageSizes: sizes, fetchPriority: 'high', crossOrigin })
 
   return (
     // eslint-disable-next-line @next/next/no-img-element -- los tamaños ya los genera Payload; next/image los volvería a procesar
@@ -36,6 +48,7 @@ export function Imagen({ media, sizes, prioridad = false, className, alt, precar
       loading={prioridad ? 'eager' : 'lazy'}
       fetchPriority={prioridad ? 'high' : 'auto'}
       decoding="async"
+      crossOrigin={crossOrigin}
       className={className}
       style={{
         objectPosition: `${m.focalX ?? 50}% ${m.focalY ?? 50}%`,
@@ -57,6 +70,7 @@ type HeroProps = {
 }
 
 // Dirección de arte: foto vertical en móvil y horizontal en escritorio.
+// Con CORS porque el slider vuelve a cargar esta misma foto como textura WebGL.
 export function ImagenHero({ escritorio, movil, prioridad, className }: HeroProps) {
   const m = comoMedia(movil)
   return (
@@ -68,6 +82,7 @@ export function ImagenHero({ escritorio, movil, prioridad, className }: HeroProp
         prioridad={prioridad}
         precargar={prioridad && !m}
         className={className}
+        crossOrigin="anonymous"
       />
     </picture>
   )

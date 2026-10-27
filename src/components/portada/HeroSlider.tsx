@@ -153,7 +153,7 @@ export function HeroSlider({ slides, children }: Props) {
               ) : (
                 <picture key={i} className={`${s.respaldo} ${actual === i ? s.respaldoActivo : ''}`}>
                   {sl.foto.srcMovil && <source media={MOVIL} srcSet={sl.foto.srcMovil} />}
-                  <img src={sl.foto.src} alt={sl.foto.alt} loading="lazy" />
+                  <img src={sl.foto.src} alt={sl.foto.alt} loading="lazy" crossOrigin="anonymous" />
                 </picture>
               ),
             )

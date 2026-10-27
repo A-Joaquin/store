@@ -82,6 +82,9 @@ export default buildConfig({
     }),
     s3Storage({
       enabled: usarR2,
+      // El navegador sube la foto directo a R2: en Vercel una petición no puede
+      // pasar de 4,5 MB y una foto de celular suele pesar más. Requiere CORS (PUT) en el bucket.
+      clientUploads: true,
       collections: {
         media: R2_PUBLIC_URL
           ? {
