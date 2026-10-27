@@ -34,22 +34,25 @@ uniform float uDefA;
 uniform float uDefB;
 uniform float uDesA;
 uniform float uDesB;
+uniform float uMarA;
+uniform float uMarB;
 uniform float uAlfaA;
 uniform float uAlfaB;
 uniform float uBEncima;
 
-// Cada foto ocupa la escena más 10 px por lado (para que la deformación no
-// muestre bordes), corrida "des" píxeles en horizontal.
-vec4 foto(sampler2D t, float def, float des) {
+// Durante la transición cada foto ocupa la escena más "mar" px por lado (para
+// que la deformación no muestre bordes), corrida "des" píxeles en horizontal.
+// Quieta va sin margen: igual que el <picture> de debajo.
+vec4 foto(sampler2D t, float def, float des, float mar) {
   vec2 m = texture2D(uMascara, clamp(vPx / uMapa, 0.0, 1.0)).rg - 0.5;
   vec2 p = vPx + m * def;
-  vec2 uv = (p - vec2(-10.0 + des, -10.0)) / (uEscena + 20.0);
+  vec2 uv = (p - vec2(-mar + des, -mar)) / (uEscena + 2.0 * mar);
   return texture2D(t, clamp(uv, 0.0, 1.0));
 }
 
 void main() {
-  vec4 a = foto(uFotoA, uDefA, uDesA);
-  vec4 b = foto(uFotoB, uDefB, uDesB);
+  vec4 a = foto(uFotoA, uDefA, uDesA, uMarA);
+  vec4 b = foto(uFotoB, uDefB, uDesB, uMarB);
   // Fondo negro y las dos capas en el orden de sus índices (como el original).
   vec3 abajo = uBEncima > 0.5 ? a.rgb : b.rgb;
   vec3 arriba = uBEncima > 0.5 ? b.rgb : a.rgb;
@@ -65,6 +68,7 @@ const easeOut = (t: number) => 1 - Math.pow(1 - t, 3)
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t
 
 export const DURACION_TRANSICION = 1000
+const MARGEN = 10 // px de escena por lado durante la transición
 
 type Uniformes = Record<string, WebGLUniformLocation | null>
 
@@ -113,7 +117,7 @@ export class HeroWebgl {
     gl.enableVertexAttribArray(aPos)
     gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0)
 
-    for (const n of ['uTam', 'uEscena', 'uMapa', 'uMascara', 'uFotoA', 'uFotoB', 'uDefA', 'uDefB', 'uDesA', 'uDesB', 'uAlfaA', 'uAlfaB', 'uBEncima'])
+    for (const n of ['uTam', 'uEscena', 'uMapa', 'uMascara', 'uFotoA', 'uFotoB', 'uDefA', 'uDefB', 'uDesA', 'uDesB', 'uMarA', 'uMarB', 'uAlfaA', 'uAlfaB', 'uBEncima'])
       this.u[n] = gl.getUniformLocation(programa, n)
     gl.uniform2f(this.u.uTam, escena.ancho, escena.alto)
     gl.uniform2f(this.u.uEscena, escena.ancho, escena.alto)
@@ -191,18 +195,23 @@ export class HeroWebgl {
     if (this.enTransicion) {
       gl.uniform1f(this.u.uDefA, lerp(1, 50, p))
       gl.uniform1f(this.u.uDesA, lerp(0, -30 * sentido, p))
+      // El margen crece y se achica con la transición: sin saltos al empezar ni al terminar.
+      gl.uniform1f(this.u.uMarA, lerp(0, MARGEN, p))
       gl.uniform1f(this.u.uAlfaA, 1 - p)
       gl.uniform1f(this.u.uDefB, lerp(300, 1, p))
       gl.uniform1f(this.u.uDesB, lerp(30 * sentido, 0, p))
+      gl.uniform1f(this.u.uMarB, lerp(MARGEN, 0, p))
       gl.uniform1f(this.u.uAlfaB, p)
       gl.uniform1f(this.u.uBEncima, this.actual > this.anterior ? 1 : 0)
     } else {
       // Fuera de la transición el filtro está apagado: foto limpia.
       gl.uniform1f(this.u.uDefA, 0)
       gl.uniform1f(this.u.uDesA, 0)
+      gl.uniform1f(this.u.uMarA, 0)
       gl.uniform1f(this.u.uAlfaA, 0)
       gl.uniform1f(this.u.uDefB, 0)
       gl.uniform1f(this.u.uDesB, 0)
+      gl.uniform1f(this.u.uMarB, 0)
       gl.uniform1f(this.u.uAlfaB, 1)
       gl.uniform1f(this.u.uBEncima, 1)
     }
