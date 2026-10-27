@@ -85,7 +85,11 @@ export function HeroSlider({ slides, children }: Props) {
       })
       .catch((e) => {
         console.warn('Hero: no cargaron las imágenes del slider, se usa el fundido simple.', e)
-        if (vivo) setSinWebgl(true)
+        if (!vivo) return
+        // Sin soltar el motor, ir() esperaría para siempre fotos que no van a cargar.
+        m.destruir()
+        motor.current = null
+        setSinWebgl(true)
       })
 
     return () => {
