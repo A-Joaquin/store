@@ -17,6 +17,12 @@ type Props = {
 
 const MOVIL = '(max-width: 812px)'
 
+// Las fotos de R2 vienen de otro dominio: la textura necesita CORS, pero el
+// <img> visible no lo pide y el navegador reusaría esa copia sin CORS y la
+// rechazaría. Otra URL (?webgl) evita compartir la caché; así, si falla el
+// CORS, solo se pierde el efecto y la foto se sigue viendo.
+const conCors = (src: string) => (src.startsWith('/') ? src : `${src}${src.includes('?') ? '&' : '?'}webgl`)
+
 const cargar = (src: string) =>
   new Promise<HTMLImageElement>((ok, mal) => {
     const img = new Image()
@@ -24,7 +30,7 @@ const cargar = (src: string) =>
     img.decoding = 'async'
     img.onload = () => ok(img)
     img.onerror = mal
-    img.src = src
+    img.src = conCors(src)
   })
 
 export function HeroSlider({ slides, children }: Props) {
@@ -153,7 +159,7 @@ export function HeroSlider({ slides, children }: Props) {
               ) : (
                 <picture key={i} className={`${s.respaldo} ${actual === i ? s.respaldoActivo : ''}`}>
                   {sl.foto.srcMovil && <source media={MOVIL} srcSet={sl.foto.srcMovil} />}
-                  <img src={sl.foto.src} alt={sl.foto.alt} loading="lazy" crossOrigin="anonymous" />
+                  <img src={sl.foto.src} alt={sl.foto.alt} loading="lazy" />
                 </picture>
               ),
             )
