@@ -35,9 +35,10 @@
   max-width: none;
   object-fit: cover;
 }
+/* Sin fundido: muestra la misma foto que el <picture> de debajo, y un fundido
+   se veía como una segunda entrada de la portada al terminar la intro. */
 .canvas {
   opacity: 0;
-  transition: opacity 2s cubic-bezier(0.215, 0.61, 0.355, 1);
 }
 .canvasListo {
   opacity: 1;

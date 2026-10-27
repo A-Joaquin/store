@@ -139,8 +139,9 @@ textarea {
 }
 
 /* Contraste automático (ContrasteAuto): el header y la barra lateral pasan a
-   blanco cuando lo que tienen debajo es oscuro. */
-[data-contraste] {
+   blanco cuando lo que tienen debajo es oscuro. La transición se activa recién
+   después de la primera medición, para que al entrar el menú no "aparezca". */
+[data-contraste-animado] [data-contraste] {
   transition:
     color 0.35s,
     filter 0.35s;
@@ -148,7 +149,7 @@ textarea {
 [data-contraste][data-oscuro] {
   color: #fff;
 }
-[data-contraste] img {
+[data-contraste-animado] [data-contraste] img {
   transition: filter 0.35s;
 }
 [data-contraste][data-oscuro] img {

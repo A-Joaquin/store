@@ -21,6 +21,8 @@ const LADO = 48 // resolución de la grilla de brillo por imagen
 
 type Grilla = { lum: Float32Array; alfa: Float32Array; ancho: number; alto: number }
 const grillas = new Map<string, Grilla | 'cargando' | 'error'>()
+// Alguna foto de la última medición todavía se estaba analizando.
+let faltanFotos = false
 
 // Brillo de una imagen en una grilla de 48×48 (se calcula una vez por imagen).
 function grillaDe(src: string): Grilla | null {
@@ -92,6 +94,7 @@ function brilloEn(x: number, y: number): number {
     const src = fuente || (el instanceof HTMLImageElement && el.complete ? el.currentSrc || el.src : null)
     if (src) {
       const g = grillaDe(src)
+      if (!g && grillas.get(src) === 'cargando') faltanFotos = true
       if (g) {
         const ajuste = fuente ? 'cover' : cs.objectFit
         const pos = fuente ? '50% 50%' : cs.objectPosition
@@ -120,9 +123,21 @@ function brilloDe(el: Element) {
 
 export function ContrasteAuto() {
   useEffect(() => {
+    const raiz = document.documentElement
+    // El primer color se pone sin transición; las transiciones se activan un
+    // cuadro después (si fuera en el mismo, el cambio inicial también se animaría).
+    let animando = 0
+    const activarTransiciones = () => {
+      if (animando) return
+      animando = window.setTimeout(() => (raiz.dataset.contrasteAnimado = ''), 50)
+    }
+    // Respaldo por si una foto tarda mucho o nunca llega a analizarse.
+    const respaldo = window.setTimeout(activarTransiciones, 3000)
+
     let cuadro = 0
     const revisar = () => {
       cuadro = 0
+      faltanFotos = false
       // Con el mega menú abierto el header queda sobre blanco.
       const megaAbierto = document.querySelector('[data-mega-abierto]')
       document.querySelectorAll<HTMLElement>('[data-contraste]').forEach((el) => {
@@ -135,6 +150,7 @@ export function ContrasteAuto() {
         if (b < OSCURO) el.dataset.oscuro = ''
         else if (b > CLARO) delete el.dataset.oscuro
       })
+      if (!faltanFotos) activarTransiciones()
     }
     const pedir = () => {
       if (!cuadro) cuadro = requestAnimationFrame(revisar)
@@ -144,7 +160,6 @@ export function ContrasteAuto() {
     // (el CSS cambia el cursor a su versión blanca). Una medición por cuadro.
     let mouse: { x: number; y: number } | null = null
     let cuadroCursor = 0
-    const raiz = document.documentElement
     const revisarCursor = () => {
       cuadroCursor = 0
       if (!mouse) return
@@ -179,6 +194,9 @@ export function ContrasteAuto() {
       window.removeEventListener('pointermove', alMover)
       window.removeEventListener('scroll', pedirCursor)
       delete raiz.dataset.cursorOscuro
+      window.clearTimeout(animando)
+      window.clearTimeout(respaldo)
+      delete raiz.dataset.contrasteAnimado
       window.removeEventListener('scroll', pedir)
       window.removeEventListener('resize', pedir)
       document.removeEventListener('load', pedir, true)
